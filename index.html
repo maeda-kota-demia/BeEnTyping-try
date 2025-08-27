@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="static/higgsino.min.js"></script>
+    <div class="game">
+        <h2 id="word">スペースキーを入力してください！</h2>
+        <h2 id="kana"><span id="kana_typed"></span><span id="kana_untyped"></span></h2>
+        <h2 id="roma"><span id="typed"></span><span id="untyped"></span></h2>
+        <div class="game__info">
+            <h3>MISS : <span id="missMount">0</span></h3>
+            <h3>TIME : <span id="timeText">00.000</span></h3>
+        </div>
+        <h3 id="otherresult"></h3>
+    </div>
+    <section id="result">
+        <a href="#result" id="result__link" class="updown">
+            <span>↓</span>
+            <span>&nbsp;</span>
+            <span>入</span>
+            <span>力</span>
+            <span>し</span>
+            <span>た</span>
+            <span>単</span>
+            <span>語</span>
+            <span>を</span>
+            <span>チ</span>
+            <span>ェ</span>
+            <span>ッ</span>
+            <span>ク</span>
+            <span>！</span>
+        </a>
+        <h2>入力した単語</h2>
+        <div id="result__table" class="result__table">
+            <div>
+                <p class="result__table__title">単語</p>
+                <p class="result__table__title">意味など</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="component">
+        <audio id="type_clear">
+            <source src="static/mp3/type_clear.mp3" type="audio/mp3">
+        </audio>
+        <audio id="type_miss">
+            <source src="static/mp3/type_miss.mp3" type="audio/mp3">
+        </audio>
+
+        <!-- <form action="{% url 'timeattack_ja' %}" method="POST" id="startform">
+            {% csrf_token %}
+            <input type="text" value="{{ genreId }}" id="input_genreid" name="genre">
+            <input type="text" value="start" name="flag">
+        </form>
+
+        <form action="{% url 'timeattack_ja' %}" method="POST" id="endform">
+            {% csrf_token %}
+            <input type="text" value="" id="input_score" name="score">
+            <input type="text" value="" id="input_objectid" name="id">
+            <input type="text" value="end" name="flag">
+        </form> -->
+    </section>
+    <script src="static/timeattack.js"></script>
+</body>
+</html>
