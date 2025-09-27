@@ -83,9 +83,21 @@ document.addEventListener('DOMContentLoaded',function() {
     var wordObjList = [];
     // var word = "";
     fetch('word.csv').then(response => response.text()).then(data => wordObjListMake(data))
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            // 0からiまでのランダムなインデックスを生成
+            const j = Math.floor(Math.random() * (i + 1));
+
+            // array[i] と array[j] を入れ替える
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 
     function wordObjListMake(data){
         const lines = data.split('\n')
+        shuffleArray(lines)
+        console.log(lines)
 
         for(let i=0;i<20;i++){
             let word = lines[i].split(',')

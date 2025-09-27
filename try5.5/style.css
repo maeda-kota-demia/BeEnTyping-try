@@ -1,0 +1,36 @@
+#panel-container {
+  display: grid;
+  grid-template-columns: repeat(5, 60px);
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.panel {
+  background: #6cf;
+  color: #222;
+  border-radius: 50%;
+  font-size: 1em;
+  padding: 0;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s, transform 0.5s, background 0.3s;
+  opacity: 1;
+  font-weight: bold;
+  box-shadow: 0 2px 8px #4448;
+  position: relative;
+}
+
+.panel.faded {
+  opacity: 0.2;
+  transform: scale(0.7);
+}
+
+.panel.active {
+  background: #ffd700;
+  color: #d33;
+  box-shadow: 0 0 14px #ffd700, 0 2px 8px #4448;
+}
