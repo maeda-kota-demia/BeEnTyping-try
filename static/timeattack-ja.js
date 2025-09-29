@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded',function() {
     
     var wordObjList = [];
     // var word = "";
-    var mode = document.getElementById('mode')
+    fetch('word.csv').then(response => response.text()).then(data => wordObjListMake(data))
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             // 0からiまでのランダムなインデックスを生成
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded',function() {
     function wordObjListMake(data){
         const lines = data.split('\n')
         shuffleArray(lines)
-        console.log(lines)
+        // console.log(lines)
 
         for(let i=0;i<20;i++){
             let word = lines[i].split(',')
@@ -169,18 +169,14 @@ document.addEventListener('DOMContentLoaded',function() {
                 startFlag = 2;
                 wordBox.innerText = wordObjList[0].example;
                 // console.log(wordObjList[0].example)
-                // typedKana.innerText = "";
-                // untypedKana.innerText = wordObjList[0].kana.untyped;
+                typedKana.innerText = "";
+                untypedKana.innerText = wordObjList[0].kana.untyped;
                 typedText.innerText = "";
                 untypedText.innerText = wordObjList[0].roman.untyped;
                 startTime = Date.now();
                 startSound.currentTime = 0;
                 startSound.play();
             },3000);
-            console.log(`word-${mode.value}.csv`)
-            await fetch(`word-${mode.value}.csv`).then(response => response.text()).then(data => wordObjListMake(data))
-            console.log(typeof(wordObjList))
-            console.log(wordObjList)
             displayTime();
             shuffleArray(highlightOrder);
             createPanels();
@@ -194,113 +190,7 @@ document.addEventListener('DOMContentLoaded',function() {
             [flag, wordObjList, missTypeCount] = inputCheck(wordObjList, flag, event.key, missTypeCount);
         }
     })
-    
-    const wordLength = 20
-    let highlightOrder = []; // どのパネルが次にハイライトされるかのランダム順
-    for (let i = 0;i < wordLength;i++){
-        highlightOrder.push(i);
-    }
-    let current = 0;
-    let miss = 0;
-    let started = false;
-    // let startTime = null;
-    let finished = false;
-    
-    const panelContainer = document.getElementById('panel-container');
-    const currentWordDiv = document.getElementById('current-word');
-    const input = document.getElementById('input');
-    const info = document.getElementById('info');
-    // const startBtn = document.getElementById('start');
-    const restartBtn = document.getElementById('restart');
-    
-    // Fisher-Yatesシャッフル
-    // function shuffle(array) {
-    //   let arr = array.slice();
-    //   for (let i = arr.length - 1; i > 0; i--) {
-    //     const j = Math.floor(Math.random() * (i + 1));
-    //     [arr[i], arr[j]] = [arr[j], arr[i]];
-    //   }
-    //   return arr;
-    // }
-    
-    function createPanels() {
-      panelContainer.innerHTML = '';
-      for (let i = 0; i < wordLength ; i++) {
-        const panel = document.createElement('div');
-        console.log('どうよ')
-        panel.className = 'panel';
-        panel.id = 'panel-' + i;
-        console.log(wordObjList[i].kana)
-        panel.textContent = wordObjList[i].roman.untyped;
-        panelContainer.appendChild(panel);
-      }
-      highlightCurrentPanel();
-    }
-    
-    function highlightCurrentPanel() {
-      for (let i = 0; i < wordLength; i++) {
-        const panel = document.getElementById('panel-' + i);
-        if (panel) {
-          panel.classList.remove('active');
-          if (i === highlightOrder[current] && !panel.classList.contains('faded')) {
-            panel.classList.add('active');
-          }
-        }
-      }
-    }
-    
-    function showCurrentWord() {
-      // 今回ハイライトされているパネルの単語を中央表示
-      const idx = highlightOrder[current];
-      currentWordDiv.textContent = wordObjList[idx];
-    //   input.value = "";
-    //   input.focus();
-      highlightCurrentPanel();
-    }
-    
-    // function finishGame() {
-    // //   finished = true;
-    // //   input.style.display = "none";
-    // //   restartBtn.style.display = "inline-block";
-    //   let time = ((Date.now() - startTime)/1000).toFixed(2);
-    //   info.innerHTML = `<strong>おめでとう！クリア！</strong><br>タイム: ${time}秒<br>ミス: ${miss}回`;
-    //   // 全パネルのハイライトを消す
-    // //   for (let i = 0; i < baseWords.length; i++) {
-    // //     const panel = document.getElementById('panel-' + i);
-    // //     if (panel) panel.classList.remove('active');
-    // //   }
-    //   shuffleArray(highlightOrder)
-    // }
-    
-    input.addEventListener("input", () => {
-      if (!started || finished) return;
-      const idx = highlightOrder[current];
-      if (input.value === wordObjList[idx]) {
-        // 正解：パネルをフェードアウト＆ハイライト解除
-        const panel = document.getElementById('panel-' + idx);
-        panel.classList.add('faded');
-        panel.classList.remove('active');
-        current++;
-        if (current === wordLength) {
-          finishGame();
-        } else {
-          showCurrentWord();
-        }
-      } else if (!wordObjList[idx].startsWith(input.value)) {
-        miss++;
-        input.classList.add("miss");
-        setTimeout(()=>input.classList.remove("miss"), 200);
-      }
-      window.onload = () => {
-        input.style.display = "none";
-      //   startBtn.style.display = "inline-block";
-        restartBtn.style.display = "none";
-        currentWordDiv.textContent = "";
-      //   info.textContent = "";
-        shuffleArray(highlightOrder);
-        
-      };
-    });
+
 })
 
 
@@ -312,6 +202,102 @@ document.addEventListener('DOMContentLoaded',function() {
 //   "apple", "banana", "cat", "dog", "egg", "fish", "grape", "hat", "ice", "juice",
 //   "kite", "lion", "moon", "nose", "orange", "pig", "queen", "rose", "star", "tree"
 // ];
+const wordLength = 20
+let highlightOrder = []; // どのパネルが次にハイライトされるかのランダム順
+for (let i = 0;i < wordLength;i++){
+    highlightOrder.push(i);
+}
+let current = 0;
+let miss = 0;
+let started = false;
+let startTime = null;
+let finished = false;
+
+const panelContainer = document.getElementById('panel-container');
+const currentWordDiv = document.getElementById('current-word');
+const input = document.getElementById('input');
+const info = document.getElementById('info');
+// const startBtn = document.getElementById('start');
+const restartBtn = document.getElementById('restart');
+
+// Fisher-Yatesシャッフル
+// function shuffle(array) {
+//   let arr = array.slice();
+//   for (let i = arr.length - 1; i > 0; i--) {
+//     const j = Math.floor(Math.random() * (i + 1));
+//     [arr[i], arr[j]] = [arr[j], arr[i]];
+//   }
+//   return arr;
+// }
+
+function createPanels() {
+  panelContainer.innerHTML = '';
+  for (let i = 0; i < baseWords.length; i++) {
+    const panel = document.createElement('div');
+    console.log('どうよ')
+    panel.className = 'panel';
+    panel.id = 'panel-' + i;
+    panel.textContent = baseWords[i];
+    panelContainer.appendChild(panel);
+  }
+  highlightCurrentPanel();
+}
+
+function highlightCurrentPanel() {
+  for (let i = 0; i < baseWords.length; i++) {
+    const panel = document.getElementById('panel-' + i);
+    if (panel) {
+      panel.classList.remove('active');
+      if (i === highlightOrder[current] && !panel.classList.contains('faded')) {
+        panel.classList.add('active');
+      }
+    }
+  }
+}
+
+function showCurrentWord() {
+  // 今回ハイライトされているパネルの単語を中央表示
+  const idx = highlightOrder[current];
+  currentWordDiv.textContent = baseWords[idx];
+//   input.value = "";
+//   input.focus();
+  highlightCurrentPanel();
+}
+
+// function finishGame() {
+// //   finished = true;
+// //   input.style.display = "none";
+// //   restartBtn.style.display = "inline-block";
+//   let time = ((Date.now() - startTime)/1000).toFixed(2);
+//   info.innerHTML = `<strong>おめでとう！クリア！</strong><br>タイム: ${time}秒<br>ミス: ${miss}回`;
+//   // 全パネルのハイライトを消す
+// //   for (let i = 0; i < baseWords.length; i++) {
+// //     const panel = document.getElementById('panel-' + i);
+// //     if (panel) panel.classList.remove('active');
+// //   }
+//   shuffleArray(highlightOrder)
+// }
+
+input.addEventListener("input", () => {
+  if (!started || finished) return;
+  const idx = highlightOrder[current];
+  if (input.value === baseWords[idx]) {
+    // 正解：パネルをフェードアウト＆ハイライト解除
+    const panel = document.getElementById('panel-' + idx);
+    panel.classList.add('faded');
+    panel.classList.remove('active');
+    current++;
+    if (current === baseWords.length) {
+      finishGame();
+    } else {
+      showCurrentWord();
+    }
+  } else if (!baseWords[idx].startsWith(input.value)) {
+    miss++;
+    input.classList.add("miss");
+    setTimeout(()=>input.classList.remove("miss"), 200);
+  }
+});
 
 // startBtn.addEventListener("click", () => {
 //   started = true;
@@ -341,4 +327,13 @@ document.addEventListener('DOMContentLoaded',function() {
 //   startTime = Date.now();
 // });
 
+window.onload = () => {
+  input.style.display = "none";
+//   startBtn.style.display = "inline-block";
+  restartBtn.style.display = "none";
+  currentWordDiv.textContent = "";
+  info.textContent = "";
+  highlightOrder = shuffleArray([...Array(baseWords.length).keys()]);
+  
+};
 

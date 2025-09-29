@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeEnPazzleTyping</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <!-- CPUとの対戦機能！ -->
+    <script src="static/higgsino.min.js"></script>
+    <button id="restart" style="display:none;">もう一度</button>
+    <select name="mode" id="mode">
+        <option value="jr-1">中学１年生レベル</option>
+        <option value="jr-2">中学２年生レベル</option>
+        <option value="jr-3">中学３年生レベル</option>
+        <option value="hi-1">高校１年生レベル</option>
+        <option value="hi-2">高校２年生レベル</option>
+        <option value="hi-3">高校３年生レベル</option>
+    </select>
+    <div id="panel-container"></div>
+    <div id="current-word"></div>
+    <input id="input" type="text" autocomplete="off" style="display:none;">
+    <div class="game">
+        <h2 id="word">スペースキーを入力してください！</h2>
+        <!-- <h2 id="kana"><span id="kana_typed"></span><span id="kana_untyped"></span></h2> -->
+        <h2 id="roma"><span id="typed"></span><span id="untyped"></span></h2>
+        <div class="game__info">
+            <h3>MISS : <span id="missMount">0</span></h3>
+            <h3>TIME : <span id="timeText">00.000</span></h3>
+        </div>
+        <h3 id="otherresult"></h3>
+    </div>
+    <section id="result">
+        <a href="#result" id="result__link" class="updown">
+            <span>↓</span>
+            <span>&nbsp;</span>
+            <span>入力した単語をチェック！</span>
+        </a>
+        <h2>入力した単語</h2>
+        <div id="result__table" class="result__table">
+            <div>
+                <p class="result__table__title">単語</p>
+                <p class="result__table__title">意味など</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="component">
+        <audio id="type_clear">
+            <source src="static/mp3/type_clear.mp3" type="audio/mp3">
+        </audio>
+        <audio id="type_miss">
+            <source src="static/mp3/type_miss.mp3" type="audio/mp3">
+        </audio>
+        <audio id="count_down">
+            <source src="static/mp3/countdown-1.mp3" type="audio/mp3">
+        </audio>
+        <audio id="start_sound">
+            <source src="static/mp3/countdown-2.mp3" type="audio/mp3">
+        </audio>
+    </section>
+    <script src="static/timeattack.js"></script>
+</body>
+</html>
