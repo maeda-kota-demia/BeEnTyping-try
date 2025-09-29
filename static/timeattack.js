@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded',function() {
     var wordBox = document.getElementById("word")
     var typedText = document.getElementById("typed");
     var untypedText = document.getElementById("untyped");
-    var typedKana = document.getElementById("kana_typed");
-    var untypedKana = document.getElementById("kana_untyped");
+    // var typedKana = document.getElementById("kana_typed");
+    // var untypedKana = document.getElementById("kana_untyped");
     var missMountText = document.getElementById("missMount");
     var timeText = document.getElementById("timeText");
     // var scoreText = document.getElementById("scoreText");
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded',function() {
 
     function displayTime() {
         const currentTime = new Date(Date.now() - startTime + stopTime);
+        // console.log(currentTime)
         const s = String(parseInt(currentTime.getMinutes()) * 60 + parseInt(currentTime.getSeconds())).padStart(2, '0');
         const ms = String(currentTime.getMilliseconds()).padStart(3, '0');
         timeText.textContent = `${s}.${ms}`;
@@ -55,11 +56,15 @@ document.addEventListener('DOMContentLoaded',function() {
         console.log(lines)
 
         for(let i=0;i<20;i++){
-            let word = lines[i].split(',')
-            wordObjList.push(
-                new Word(word[0],word[1])
-            )
-        }
+            let word = lines[i].split(',');
+            wordObjList.push({
+                "is_finish": false,
+                "untyped": word[0],
+                "typed": "",
+                "word": word[0],
+                "remarks": word[1],
+            });
+        };
     }
 
     function resultIndicate(wordObjList){
@@ -83,61 +88,108 @@ document.addEventListener('DOMContentLoaded',function() {
             document.getElementById("result__link").classList.add("done");
         }, 1000)
     }
-
+    // タイピング認識ロジック
     function inputCheck(wordObjList, flag, key, missTypeCount){
-        // Wordオブジェクトのtypedメソッド→正しい文字か、その文字が終了したかを判断できる
-        const { isMiss, isFinish } = wordObjList[flag].typed(event.key);
-        // console.log(wordObjList[flag])
         typeCount += 1;
-        if(isMiss){
+
+        // 正解のキーをタイプしたら
+        if(key == wordObjList[flag]["untyped"].charAt(0)){
+            clearSound.currentTime = 0;
+            clearSound.play();
+            // wordObjList[flag]["inputNum"] += 1;
+
+            // ラスト1文字→次のワードへ
+            if(wordObjList[flag]["untyped"].length == 1){
+                wordObjList[flag]["typed"] = wordObjList[flag]["typed"] + wordObjList[flag]["untyped"].charAt(0);
+                wordObjList[flag]["untyped"] = "";
+                flag += 1;
+
+                // ゲームの最終単語→ゲーム終了
+                if(flag == wordObjList.length){
+                    clearTimeout(timeoutID);
+                    stopTime += (Date.now() - startTime);
+                    typedText.innerText = "";
+                    var score = parseInt((letterCount + missTypeCount) / stopTime * 60000 * (letterCount / (letterCount + missTypeCount)) ** 3);
+                    untypedText.innerText = `SCORE : ${score}`;
+                    otherresult.innerText = "合計入力文字数（ミスを含む）" + typeCount ;
+                    scoreForm.setAttribute("value", String(score));
+                    endSend();
+                    resultIndicate(wordObjList);
+                }
+                else{
+                    typedText.innerText = "";
+                    untypedText.innerText = wordObjList[flag]["untyped"];
+                }
+            }
+            else{
+                wordObjList[flag]["typed"] = wordObjList[flag]["typed"] + wordObjList[flag]["untyped"].charAt(0);
+                wordObjList[flag]["untyped"] = wordObjList[flag]["untyped"].substr(1);
+                typedText.innerText = wordObjList[flag]["typed"];
+                untypedText.innerText = wordObjList[flag]["untyped"];
+            }
+        }
+        else{
             missSound.currentTime = 0;
             missSound.play();
             missTypeCount += 1;
             missMountText.innerText = missTypeCount;
         }
-        else{
-            clearSound.currentTime = 0;
-            clearSound.play();
-            if(isFinish){
-                flag += 1;
-                if(flag == wordObjList.length){
-                    // ゲームの終了
-                    // setTimeoutのキャンセル
-                    clearTimeout(timeoutID);
-                    stopTime += (Date.now() - startTime);
-                    typedText.innerText = "";
-                    var score = parseInt(typeCount / stopTime * 60000 * ( (typeCount - missTypeCount) / typeCount) ** 3);
-                    wordBox.innerText = `SCORE : ${score}`;
-                    typedKana.innerText = "";
-                    untypedKana.innerText = "";
-                    typedText.innerText = "";
-                    untypedText.innerText = "";
-                    otherresult.innerText = "合計入力文字数（ミスを含む）" + typeCount ;
-                    scoreForm.setAttribute("value", String(score));
-                    finishGame()
-                    // endSend();
-                    // resultIndicate(wordObjList);
-                }
-                else{
-                    wordBox.innerText = wordObjList[flag].example;
-                    typedKana.innerText = "";
-                    untypedKana.innerText = wordObjList[flag].kana.untyped;
-                    typedText.innerText = "";
-                    untypedText.innerText = wordObjList[flag].roman.untyped;
-                }
-            }
-            else{
-                typedKana.innerText = wordObjList[flag].kana.typed;
-                untypedKana.innerText = wordObjList[flag].kana.untyped;
-                typedText.innerText = wordObjList[flag].roman.typed;
-                untypedText.innerText = wordObjList[flag].roman.untyped;
-            }
-        }
         return [flag, wordObjList, missTypeCount]
     }
+    // function inputCheck(wordObjList, flag, key, missTypeCount){
+    //     // Wordオブジェクトのtypedメソッド→正しい文字か、その文字が終了したかを判断できる
+    //     const { isMiss, isFinish } = wordObjList[flag].typed(event.key);
+    //     // console.log(wordObjList[flag])
+    //     typeCount += 1;
+    //     if(isMiss){
+    //         missSound.currentTime = 0;
+    //         missSound.play();
+    //         missTypeCount += 1;
+    //         missMountText.innerText = missTypeCount;
+    //     }
+    //     else{
+    //         clearSound.currentTime = 0;
+    //         clearSound.play();
+    //         if(isFinish){
+    //             flag += 1;
+    //             if(flag == wordObjList.length){
+    //                 // ゲームの終了
+    //                 // setTimeoutのキャンセル
+    //                 clearTimeout(timeoutID);
+    //                 stopTime += (Date.now() - startTime);
+    //                 typedText.innerText = "";
+    //                 var score = parseInt(typeCount / stopTime * 60000 * ( (typeCount - missTypeCount) / typeCount) ** 3);
+    //                 wordBox.innerText = `SCORE : ${score}`;
+    //                 typedKana.innerText = "";
+    //                 untypedKana.innerText = "";
+    //                 typedText.innerText = "";
+    //                 untypedText.innerText = "";
+    //                 otherresult.innerText = "合計入力文字数（ミスを含む）" + typeCount ;
+    //                 scoreForm.setAttribute("value", String(score));
+    //                 finishGame()
+    //                 // endSend();
+    //                 // resultIndicate(wordObjList);
+    //             }
+    //             else{
+    //                 wordBox.innerText = wordObjList[flag].example;
+    //                 typedKana.innerText = "";
+    //                 untypedKana.innerText = wordObjList[flag].kana.untyped;
+    //                 typedText.innerText = "";
+    //                 untypedText.innerText = wordObjList[flag].roman.untyped;
+    //             }
+    //         }
+    //         else{
+    //             typedKana.innerText = wordObjList[flag].kana.typed;
+    //             untypedKana.innerText = wordObjList[flag].kana.untyped;
+    //             typedText.innerText = wordObjList[flag].roman.typed;
+    //             untypedText.innerText = wordObjList[flag].roman.untyped;
+    //         }
+    //     }
+    //     return [flag, wordObjList, missTypeCount]
+    // }
 
     
-    window.addEventListener("keydown", async (event) => {
+    window.addEventListener("keydown", (event) => {
         // console.log('key_down')
         if(startFlag == 0 && event.key == " "){
             // console.log('space')
@@ -150,41 +202,23 @@ document.addEventListener('DOMContentLoaded',function() {
                     // console.log('１秒')
                 }, j*1000)
             }
-            // wordBox.innerText = "3";
-            // startFlag = 1;
-            // // startSend();
-            // countSound.currentTime = 0;
-            // countSound.play();
-            // setTimeout(() => {
-            //     wordBox.innerText = "2";
-            //     countSound.currentTime = 0;
-            //     countSound.play();
-            // }, 1000);
-            // setTimeout(() => {
-            //     wordBox.innerText = "1";
-            //     countSound.currentTime = 0;
-            //     countSound.play();
-            // }, 2000);
-            setTimeout(()=> {
+            setTimeout(async ()=> {
                 startFlag = 2;
-                wordBox.innerText = wordObjList[0].example;
-                // console.log(wordObjList[0].example)
-                // typedKana.innerText = "";
-                // untypedKana.innerText = wordObjList[0].kana.untyped;
-                typedText.innerText = "";
-                untypedText.innerText = wordObjList[0].roman.untyped;
+                wordBox.innerText = '';
+                // typedText.innerText = "";
+                // untypedText.innerText = wordObjList[0].roman.untyped;
                 startTime = Date.now();
                 startSound.currentTime = 0;
                 startSound.play();
+                console.log(`word-${mode.value}.csv`)
+                await fetch(`word-${mode.value}.csv`).then(response => response.text()).then(data => wordObjListMake(data))
+                // console.log(typeof(wordObjList))
+                // console.log(wordObjList)
+                displayTime();
+                shuffleArray(highlightOrder);
+                createPanels();
+                showCurrentWord();
             },3000);
-            console.log(`word-${mode.value}.csv`)
-            await fetch(`word-${mode.value}.csv`).then(response => response.text()).then(data => wordObjListMake(data))
-            console.log(typeof(wordObjList))
-            console.log(wordObjList)
-            displayTime();
-            shuffleArray(highlightOrder);
-            createPanels();
-            showCurrentWord();
             // setTimeout(() => {
             //     startFlag = 2;
             // }, 3000);
@@ -224,17 +258,26 @@ document.addEventListener('DOMContentLoaded',function() {
     // }
     
     function createPanels() {
-      panelContainer.innerHTML = '';
-      for (let i = 0; i < wordLength ; i++) {
-        const panel = document.createElement('div');
-        console.log('どうよ')
-        panel.className = 'panel';
-        panel.id = 'panel-' + i;
-        console.log(wordObjList[i].kana)
-        panel.textContent = wordObjList[i].roman.untyped;
-        panelContainer.appendChild(panel);
-      }
-      highlightCurrentPanel();
+        panelContainer.innerHTML = '';
+        for (let i = 0; i < wordLength ; i++) {
+            const panel = document.createElement('div');
+            const typedSpan = document.createElement('span');
+            const untypedSpan = document.createElement('span');
+            
+            typedSpan.id = 'typed'
+            untypedSpan.id = 'untyped' 
+            // console.log('どうよ')
+            panel.className = 'panel';
+            panel.id = 'panel-' + i;
+            // console.log(wordObjList[  i].kana)
+            console.log(wordObjList[i]);
+            typedSpan.textContent = wordObjList[i]['untyped'];
+            console.log(typedSpan.textContent)
+            panel.appendChild(typedSpan);
+            panel.appendChild(untypedSpan);
+            panelContainer.appendChild(panel);
+        }
+        highlightCurrentPanel();
     }
     
     function highlightCurrentPanel() {
@@ -252,7 +295,7 @@ document.addEventListener('DOMContentLoaded',function() {
     function showCurrentWord() {
       // 今回ハイライトされているパネルの単語を中央表示
       const idx = highlightOrder[current];
-      currentWordDiv.textContent = wordObjList[idx];
+    //   currentWordDiv.textContent = wordObjList[idx];
     //   input.value = "";
     //   input.focus();
       highlightCurrentPanel();
@@ -272,6 +315,13 @@ document.addEventListener('DOMContentLoaded',function() {
     //   shuffleArray(highlightOrder)
     // }
     
+
+// インプットタグ：始まってない、終了済み→return
+// idx→現在何単語目か（current)とその順番のhighlightOrderを代入
+// 正解：パネルをフェードアウト＆ハイライト解除＋最後の単語→終了関数、最後じゃない→現在の単語表示(showCurrentWord)
+// 不正解：missのカウントアップ、＋ミスしたら色変わる
+
+
     input.addEventListener("input", () => {
       if (!started || finished) return;
       const idx = highlightOrder[current];
@@ -291,16 +341,16 @@ document.addEventListener('DOMContentLoaded',function() {
         input.classList.add("miss");
         setTimeout(()=>input.classList.remove("miss"), 200);
       }
-      window.onload = () => {
-        input.style.display = "none";
-      //   startBtn.style.display = "inline-block";
-        restartBtn.style.display = "none";
-        currentWordDiv.textContent = "";
-      //   info.textContent = "";
-        shuffleArray(highlightOrder);
-        
-      };
     });
+    window.onload = () => {
+      input.style.display = "none";
+    //   startBtn.style.display = "inline-block";
+      restartBtn.style.display = "none";
+    //   currentWordDiv.textContent = "";
+    //   info.textContent = "";
+      shuffleArray(highlightOrder);
+      
+    };
 })
 
 
