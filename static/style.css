@@ -39,17 +39,15 @@ body {
 }
 
 #panel-container {
-  display: grid;
-  grid-template-columns: repeat(5, 60px);
-  gap: 14px;
-  justify-content: center;
-  margin-bottom: 30px;
-  /* display: block; */
-  /* width: 100%;
+  display: block;
+  /* grid-template-columns: repeat(5, 60px); */
+  /* gap: 14px; */
+  /* justify-content: center; */
+  width: 100%;
   min-height: 400px;
   height: 60vh;
   margin-bottom: 3%;
-  position: relative; */
+  position: relative;
 }
 
 .panel {
@@ -58,8 +56,9 @@ body {
   border-radius: 50%;
   font-size: 1em;
   padding: 0;
-  height: 60px;
-  width: 60px;
+  /* height: 5vh; */
+  width: 95px;
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,11 +66,7 @@ body {
   opacity: 1;
   font-weight: bold;
   box-shadow: 0 2px 8px #4448;
-  position: relative;
-  /* position: absolute; */
-  /* height: 5vh; */
-  /* width: 95px;
-  aspect-ratio: 1; */
+  position: absolute;
 }
 
 .panel.faded {

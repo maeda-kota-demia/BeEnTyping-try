@@ -249,72 +249,72 @@ document.addEventListener('DOMContentLoaded',function() {
             panel.appendChild(typedSpan);
             panel.appendChild(untypedSpan);
             panelContainer.appendChild(panel);
-            // randomPanelPlacement()
+            randomPanelPlacement()
         }
-        // if (placeMiss){
-        //     window.alert('うまく単語プレートを配置できませんでした。再読込します。')
-        //     location.reload()
-        // }
+        if (placeMiss){
+            window.alert('うまく単語プレートを配置できませんでした。再読込します。')
+            location.reload()
+        }
         highlightCurrentPanel();
     }
 
     // 重なりなし
-    // let placeMiss = false;
-    // function randomPanelPlacement() {
-    //     const container = document.getElementById('panel-container');
-    //     // HTMLCollectionを配列に変換してforEachを使えるようにする
-    //     const panels = Array.from(container.getElementsByClassName('panel'));
-    //     const containerWidth = container.clientWidth;
-    //     const containerHeight = container.clientHeight;
-    //     // console.log(`containerWidth:${containerWidth},containerHeight:${containerHeight}`)
-    //     const panelSize = panels[0].clientWidth;// 円の直径
-    //     const panelRadius = panelSize / 2; // 円の半径
+    let placeMiss = false;
+    function randomPanelPlacement() {
+        const container = document.getElementById('panel-container');
+        // HTMLCollectionを配列に変換してforEachを使えるようにする
+        const panels = Array.from(container.getElementsByClassName('panel'));
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        // console.log(`containerWidth:${containerWidth},containerHeight:${containerHeight}`)
+        const panelSize = panels[0].clientWidth;// 円の直径
+        const panelRadius = panelSize / 2; // 円の半径
 
-    //     // 配置済み円の中心座標を保持する配列
-    //     const placedCenters = [];
+        // 配置済み円の中心座標を保持する配列
+        const placedCenters = [];
 
-    //     panels.forEach(panel => {
-    //         let newPosition = null;
-    //         let attempts = 0;
-    //         const maxAttempts = 1000; // 無限ループを避けるための試行回数上限
+        panels.forEach(panel => {
+            let newPosition = null;
+            let attempts = 0;
+            const maxAttempts = 1000; // 無限ループを避けるための試行回数上限
 
-    //         while (attempts < maxAttempts) {
-    //             // パネルのサイズ分を引いて画面からはみ出ないように設定する
-    //             const randomLeft = Math.random() * (containerWidth - panelSize);
-    //             const randomTop = Math.random() * (containerHeight - panelSize);
+            while (attempts < maxAttempts) {
+                // パネルのサイズ分を引いて画面からはみ出ないように設定する
+                const randomLeft = Math.random() * (containerWidth - panelSize);
+                const randomTop = Math.random() * (containerHeight - panelSize);
                 
-    //             const newCenter = {
-    //                 x: randomLeft + panelRadius,
-    //                 y: randomTop + panelRadius,
-    //             };
+                const newCenter = {
+                    x: randomLeft + panelRadius,
+                    y: randomTop + panelRadius,
+                };
 
-    //             // some() を使って、いずれかの既存の円と重なるかチェック
-    //             const isOverlapping = placedCenters.some(placedCenter => {
-    //                 const dx = newCenter.x - placedCenter.x;
-    //                 const dy = newCenter.y - placedCenter.y;
-    //                 // Math.sqrtを避け（処理の高速化）、距離の2乗で比較する
-    //                 return (dx * dx + dy * dy) < (panelSize * panelSize);
-    //             });
+                // some() を使って、いずれかの既存の円と重なるかチェック
+                const isOverlapping = placedCenters.some(placedCenter => {
+                    const dx = newCenter.x - placedCenter.x;
+                    const dy = newCenter.y - placedCenter.y;
+                    // Math.sqrtを避け（処理の高速化）、距離の2乗で比較する
+                    return (dx * dx + dy * dy) < (panelSize * panelSize);
+                });
 
-    //             // 重なっていなければ、その位置を採用してループを抜ける
-    //             if (!isOverlapping) {
-    //                 newPosition = { left: randomLeft, top: randomTop, center: newCenter };
-    //                 break;
-    //             }
-    //             attempts++;
-    //         }
+                // 重なっていなければ、その位置を採用してループを抜ける
+                if (!isOverlapping) {
+                    newPosition = { left: randomLeft, top: randomTop, center: newCenter };
+                    break;
+                }
+                attempts++;
+            }
 
-    //         if (newPosition) {
-    //             panel.style.left = `${newPosition.left}px`;
-    //             panel.style.top = `${newPosition.top}px`;
-    //             placedCenters.push(newPosition.center);
-    //         } else {
-    //             console.log('変更')
-    //             placeMiss = true
-    //         }
-    //     });
-    //     // console.log(placedCenters)
-    // }
+            if (newPosition) {
+                panel.style.left = `${newPosition.left}px`;
+                panel.style.top = `${newPosition.top}px`;
+                placedCenters.push(newPosition.center);
+            } else {
+                console.log('変更')
+                placeMiss = true
+            }
+        });
+        // console.log(placedCenters)
+    }
     
     function highlightCurrentPanel() {
       for (let i = 0; i < wordLength; i++) {
