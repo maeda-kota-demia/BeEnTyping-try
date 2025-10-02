@@ -3,27 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="static/img/favicon.svg" id="favicon">
     <title>BeEnPazzleTyping</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
     <!-- CPUとの対戦機能！ -->
     <script src="static/higgsino.min.js"></script>
-    <button id="restart" style="display:none;">もう一度</button>
-    <select name="mode" id="mode">
-        <option value="jr-1">中学１年生レベル</option>
-        <option value="jr-2">中学２年生レベル</option>
-        <option value="jr-3">中学３年生レベル</option>
-        <option value="hi-1">高校１年生レベル</option>
-        <option value="hi-2">高校２年生レベル</option>
-        <option value="hi-3">高校３年生レベル</option>
-    </select>
-    <div id="panel-container"></div>
-    <!-- <div id="current-word"></div> -->
-    <input id="input" type="text" autocomplete="off" style="display:none;">
-    <div class="game">
+    <header id="header">
+        <div class="logo">
+            <img src="static/img/logo_color.svg" alt=""><span class="logo-str">Typing Game</span>
+        </div>
+        <div class="genre-wrapper">
+            <div class="genre-heading">
+                <h3>レベルを選択しよう！</h3>
+            </div>
+            <div class="genre-options">
+                <label class="genre_btn active-genre" >
+                    <input name="genre" type="radio" value="jr-1">中学１年生レベル英単語</input>
+                </label>
+                <label class="genre_btn" >
+                    <input name="genre" type="radio"  value="jr-2">中学２年生レベル英単語</input>
+                </label>
+                <label class="genre_btn" >
+                    <input name="genre" type="radio"  value="jr-3">中学３年生レベル英単語</input>
+                </label>
+                <label class="genre_btn" >
+                    <input name="genre" type="radio"  value="hi-1">高校１年生レベル英単語</input>
+                </label>
+                <label class="genre_btn" >
+                    <input name="genre" type="radio"  value="hi-2">高校２年生レベル英単語</input>
+                </label>
+                <label class="genre_btn" >
+                    <input name="genre" type="radio"  value="hi-3">高校３年生レベル英単語</input>
+                </label>
+                <input name="genre" id="genre" value="jr-1" type="hidden">
+            </div>
+        </div>
+    </header>
+    <div id="panel-container">
         <h2 id="word">スペースキーを入力してください！</h2>
-        <!-- <h2 id="kana"><span id="kana_typed"></span><span id="kana_untyped"></span></h2> -->
+        <!-- <div class="panel">Maeda Kota</div> -->
+    </div>
+    <div class="game">
         <h2 id="roma"><span id="typed" style="display:none;"></span><span id="untyped" style="display:none;"></span></h2>
         <div class="game__info">
             <h3>MISS : <span id="missMount">0</span></h3>

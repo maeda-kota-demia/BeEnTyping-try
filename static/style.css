@@ -1,9 +1,55 @@
+html{
+  height: 100%;
+}
+body {
+  /* これが画面全体に行くようにする */
+  background-image: url(img/background.svg);
+  background:linear-gradient(70deg, rgba(15, 155, 32, 0.4), rgba(255, 255, 255, 0.4));
+  background-attachment: fixed;
+  min-height: 100%;
+}
+
+#header {
+  margin-top: 3%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0;
+}
+
+.logo {
+  margin-left: 1%;
+}
+
+.genre-wrapper {
+  /* margin-right: 20%; */
+}
+
+.genre-heading {
+  /* margin-bottom: 10%; */
+}
+
+.genre_btn {
+  background-color: rgba(15,155,32,0.26);
+}
+
+.active-genre {
+  background-color: #7eee3e;
+  color: #fff;
+}
+
 #panel-container {
   display: grid;
   grid-template-columns: repeat(5, 60px);
   gap: 14px;
   justify-content: center;
   margin-bottom: 30px;
+  /* display: block; */
+  /* width: 100%;
+  min-height: 400px;
+  height: 60vh;
+  margin-bottom: 3%;
+  position: relative; */
 }
 
 .panel {
@@ -22,6 +68,10 @@
   font-weight: bold;
   box-shadow: 0 2px 8px #4448;
   position: relative;
+  /* position: absolute; */
+  /* height: 5vh; */
+  /* width: 95px;
+  aspect-ratio: 1; */
 }
 
 .panel.faded {

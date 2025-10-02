@@ -11,13 +11,8 @@ document.addEventListener('DOMContentLoaded',function() {
     var typedText = document.getElementById("typed");
     var untypedText = document.getElementById("untyped");
     var wordBox = document.getElementById("word")
-    // var typedKana = document.getElementById("kana_typed");
-    // var untypedKana = document.getElementById("kana_untyped");
     var missMountText = document.getElementById("missMount");
     var timeText = document.getElementById("timeText");
-    // var scoreText = document.getElementById("scoreText");
-    // var idForm = document.getElementById("input_objectid");
-    // var scoreForm = document.getElementById("input_score");
     var otherresult = document.getElementById("otherresult");
     const resultSection = document.getElementById('result')
 
@@ -39,8 +34,25 @@ document.addEventListener('DOMContentLoaded',function() {
     let idx;
     
     var wordObjList = [];
-    // var word = "";
-    var mode = document.getElementById('mode')
+    var genre = document.getElementById('genre')
+    const genreBtns = document.querySelectorAll('.genre_btn');
+    let radioInput = document.querySelector('input[name="genre"]');
+    let newRadioInput;
+
+    genreBtns.forEach(element => {
+        element.querySelector('input').addEventListener('click',(event) => {
+            console.log('クリックされました。')
+            newRadioInput = event.target;
+            if(radioInput !== newRadioInput){
+                genre.value = newRadioInput.value;
+                newRadioInput.parentElement.classList.add('active-genre');
+                radioInput.parentElement.classList.remove('active-genre');
+            }
+            newRadioInput.blur();
+            radioInput = newRadioInput;
+        });
+    });
+
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             // 0からiまでのランダムなインデックスを生成
@@ -55,7 +67,7 @@ document.addEventListener('DOMContentLoaded',function() {
     function wordObjListMake(data){
         const lines = data.split('\n')
         shuffleArray(lines)
-        console.log(lines)
+        // console.log(lines)
 
         for(let i=0;i<20;i++){
             let word = lines[i].split(',');
@@ -117,7 +129,8 @@ document.addEventListener('DOMContentLoaded',function() {
                 highlightCurrentPanel();
 
                 // ゲームの最終単語→ゲーム終了
-                if(current == wordLength){
+                // 開発用：wordLength → 1にしている
+                if(current == 1){
                     clearTimeout(timeoutID);
                     stopTime += (Date.now() - startTime);
                     typedText.innerText = "";
@@ -175,15 +188,15 @@ document.addEventListener('DOMContentLoaded',function() {
                 startTime = Date.now();
                 startSound.currentTime = 0;
                 startSound.play();
-                console.log(`word-${mode.value}.csv`)
-                await fetch(`word-${mode.value}.csv`).then(response => response.text()).then(data => wordObjListMake(data))
+                // console.log(`word-${genre.value}.csv`)
+                await fetch(`word-${genre.value}.csv`).then(response => response.text()).then(data => wordObjListMake(data))
                 // console.log(typeof(wordObjList))
                 // console.log(wordObjList)
                 displayTime();
                 shuffleArray(highlightOrder);
                 let current = 0;
                 createPanels();
-                showCurrentWord();
+                // showCurrentWord();
             },3000);
             // setTimeout(() => {
             //     startFlag = 2;
@@ -211,7 +224,6 @@ document.addEventListener('DOMContentLoaded',function() {
     
     const panelContainer = document.getElementById('panel-container');
     const currentWordDiv = document.getElementById('current-word');
-    const input = document.getElementById('input');
     const info = document.getElementById('info');
     // const startBtn = document.getElementById('start');
     const restartBtn = document.getElementById('restart');
@@ -230,16 +242,79 @@ document.addEventListener('DOMContentLoaded',function() {
             panel.className = 'panel';
             panel.id = 'panel-' + i;
             // console.log(wordObjList[  i].kana)
-            console.log(wordObjList[i]);
+            // console.log(wor dObjList[i]);
             typedSpan.textContent = wordObjList[i]['untyped'];
             letterCount += wordObjList[i]['letterLength'];
-            console.log(typedSpan.textContent)
+            // console.log(typedSpan.textContent)
             panel.appendChild(typedSpan);
             panel.appendChild(untypedSpan);
             panelContainer.appendChild(panel);
+            // randomPanelPlacement()
         }
+        // if (placeMiss){
+        //     window.alert('うまく単語プレートを配置できませんでした。再読込します。')
+        //     location.reload()
+        // }
         highlightCurrentPanel();
     }
+
+    // 重なりなし
+    // let placeMiss = false;
+    // function randomPanelPlacement() {
+    //     const container = document.getElementById('panel-container');
+    //     // HTMLCollectionを配列に変換してforEachを使えるようにする
+    //     const panels = Array.from(container.getElementsByClassName('panel'));
+    //     const containerWidth = container.clientWidth;
+    //     const containerHeight = container.clientHeight;
+    //     // console.log(`containerWidth:${containerWidth},containerHeight:${containerHeight}`)
+    //     const panelSize = panels[0].clientWidth;// 円の直径
+    //     const panelRadius = panelSize / 2; // 円の半径
+
+    //     // 配置済み円の中心座標を保持する配列
+    //     const placedCenters = [];
+
+    //     panels.forEach(panel => {
+    //         let newPosition = null;
+    //         let attempts = 0;
+    //         const maxAttempts = 1000; // 無限ループを避けるための試行回数上限
+
+    //         while (attempts < maxAttempts) {
+    //             // パネルのサイズ分を引いて画面からはみ出ないように設定する
+    //             const randomLeft = Math.random() * (containerWidth - panelSize);
+    //             const randomTop = Math.random() * (containerHeight - panelSize);
+                
+    //             const newCenter = {
+    //                 x: randomLeft + panelRadius,
+    //                 y: randomTop + panelRadius,
+    //             };
+
+    //             // some() を使って、いずれかの既存の円と重なるかチェック
+    //             const isOverlapping = placedCenters.some(placedCenter => {
+    //                 const dx = newCenter.x - placedCenter.x;
+    //                 const dy = newCenter.y - placedCenter.y;
+    //                 // Math.sqrtを避け（処理の高速化）、距離の2乗で比較する
+    //                 return (dx * dx + dy * dy) < (panelSize * panelSize);
+    //             });
+
+    //             // 重なっていなければ、その位置を採用してループを抜ける
+    //             if (!isOverlapping) {
+    //                 newPosition = { left: randomLeft, top: randomTop, center: newCenter };
+    //                 break;
+    //             }
+    //             attempts++;
+    //         }
+
+    //         if (newPosition) {
+    //             panel.style.left = `${newPosition.left}px`;
+    //             panel.style.top = `${newPosition.top}px`;
+    //             placedCenters.push(newPosition.center);
+    //         } else {
+    //             console.log('変更')
+    //             placeMiss = true
+    //         }
+    //     });
+    //     // console.log(placedCenters)
+    // }
     
     function highlightCurrentPanel() {
       for (let i = 0; i < wordLength; i++) {
