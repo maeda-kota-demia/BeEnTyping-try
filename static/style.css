@@ -62,11 +62,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.5s, transform 0.5s, background 0.3s;
+  /* transition: opacity 0.5s, transform 0.5s, background 0.3s; */
+  transition: transform 0.3s ease;
   opacity: 1;
   font-weight: bold;
   box-shadow: 0 2px 8px #4448;
   position: absolute;
+}
+.panel:hover{
+  /* display: inline-block; */
+  transform: scale(1.2)
 }
 
 .panel.faded {

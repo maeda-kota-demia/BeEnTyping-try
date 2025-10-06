@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded',function() {
     var wordBox = document.getElementById("word")
     var missMountText = document.getElementById("missMount");
     var timeText = document.getElementById("timeText");
+    let wordCountText = document.getElementById('WordCount');
     var otherresult = document.getElementById("otherresult");
     const resultSection = document.getElementById('result')
 
@@ -24,8 +25,7 @@ document.addEventListener('DOMContentLoaded',function() {
         const ms = String(currentTime.getMilliseconds()).padStart(3, '0');
         timeText.textContent = `${s}.${ms}`;
         timeoutID = setTimeout(displayTime, 10);
-    }
-    
+    }    
 
     // var flag = 0;
     var startFlag = 0;
@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded',function() {
         };
     }
 
+
     // 調整する
     function resultIndicate(wordObjList){
         var table = document.getElementById("result__table");
@@ -126,6 +127,7 @@ document.addEventListener('DOMContentLoaded',function() {
                 wordObjList[idx]["typed"] = wordObjList[idx]["typed"] + wordObjList[idx]["untyped"].charAt(0);
                 wordObjList[idx]["untyped"] = "";
                 current += 1;
+                wordCountText.textContent = current;
                 highlightCurrentPanel();
 
                 // ゲームの最終単語→ゲーム終了
@@ -236,8 +238,8 @@ document.addEventListener('DOMContentLoaded',function() {
             const typedSpan = document.createElement('span');
             const untypedSpan = document.createElement('span');
             
-            typedSpan.className = 'typed'+i
-            untypedSpan.className = 'untyped'+i 
+            typedSpan.className = 'typed-'+i
+            untypedSpan.className = 'untyped-'+i 
             // console.log('どうよ')
             panel.className = 'panel';
             panel.id = 'panel-' + i;
@@ -249,6 +251,16 @@ document.addEventListener('DOMContentLoaded',function() {
             panel.appendChild(typedSpan);
             panel.appendChild(untypedSpan);
             panelContainer.appendChild(panel);
+            panel.addEventListener('mouseenter',(event) => {
+                event.target.firstElementChild.textContent = wordObjList[i]['remarks']
+                event.target.lastElementChild.textContent = ''
+
+            })
+            panel.addEventListener('mouseleave',(event) =>{
+                event.target.firstElementChild.textContent = wordObjList[i]['typed']
+                event.target.lastElementChild.textContent = wordObjList[i]['untyped']
+            })
+            panel.addEventListener
             randomPanelPlacement()
         }
         if (placeMiss){
