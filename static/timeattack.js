@@ -8,13 +8,14 @@ document.addEventListener('DOMContentLoaded',function() {
     var stopTime = 0;
     var timeoutID;
     
-    var typedText = document.getElementById("typed");
-    var untypedText = document.getElementById("untyped");
+    let typedText;
+    let untypedText;
     var wordBox = document.getElementById("word")
     var missMountText = document.getElementById("missMount");
     var timeText = document.getElementById("timeText");
     let wordCountText = document.getElementById('WordCount');
     var otherresult = document.getElementById("otherresult");
+    const scoreText = document.getElementById('score')
     const resultSection = document.getElementById('result')
 
 
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded',function() {
     var startFlag = 0;
     var missTypeCount = 0;
     var typeCount = 0;
-    let idx;
+    // let idx;
     
     var wordObjList = [];
     var genre = document.getElementById('genre')
@@ -116,7 +117,6 @@ document.addEventListener('DOMContentLoaded',function() {
         typeCount += 1;
 
         // 正解のキーをタイプしたら
-        idx = highlightOrder[current]
         if(key == wordObjList[idx]["untyped"].charAt(0)){
             clearSound.currentTime = 0;
             clearSound.play();
@@ -126,23 +126,33 @@ document.addEventListener('DOMContentLoaded',function() {
             if(wordObjList[idx]["untyped"].length == 1){
                 wordObjList[idx]["typed"] = wordObjList[idx]["typed"] + wordObjList[idx]["untyped"].charAt(0);
                 wordObjList[idx]["untyped"] = "";
+                typedText.textContent = wordObjList[idx]['typed']
+                untypedText.textContent = wordObjList[idx]['untyped']
                 current += 1;
+                // idxが、現在の単語のwordObjListの番号を示す。それを用いて、typed,untypedを特定し、その中の単語を変える。
+                highlightCurrentPanel(idx,current);
+                idx = highlightOrder[current]
                 wordCountText.textContent = current;
-                highlightCurrentPanel();
+                typedText = document.getElementById(`typed-${idx}`)
+                untypedText = document.getElementById(`untyped-${idx}`)
+                console.log(`inputCheckで変更後の${idx}`)
 
                 // ゲームの最終単語→ゲーム終了
                 // 開発用：wordLength → 1にしている
-                if(current == 1){
+                if(current == 5){
                     clearTimeout(timeoutID);
                     stopTime += (Date.now() - startTime);
-                    typedText.innerText = "";
+                    typedText.textContent = "";
                     var score = parseInt((letterCount + missTypeCount) / stopTime * 60000 * (letterCount / (letterCount + missTypeCount)) ** 3);
-                    untypedText.innerText = `SCORE : ${score}`;
-                    otherresult.innerText = "合計入力文字数（ミスを含む）" + typeCount ;
+                    scoreText.innerText = `SCORE : ${score}`;
+                    otherresult.innerText = `合計入力文字数（ミスを含む${typeCount}）`;
                     // 全パネルのハイライトを消す
                     for (let i = 0; i < wordLength; i++) {
                         const panel = document.getElementById('panel-' + i);
-                        if (panel) panel.classList.remove('active');
+                        if (panel) {
+                            panel.classList.remove('active','faded');
+                            // panel.classList.remove('')
+                        }    
                     }
                     startFlag = 3
                     // console.log('終了')
@@ -156,8 +166,11 @@ document.addEventListener('DOMContentLoaded',function() {
             else{
                 wordObjList[idx]["typed"] = wordObjList[idx]["typed"] + wordObjList[idx]["untyped"].charAt(0);
                 wordObjList[idx]["untyped"] = wordObjList[idx]["untyped"].substr(1);
-                typedText.innerText = wordObjList[idx]["typed"];
-                untypedText.innerText = wordObjList[idx]["untyped"];
+                // console.log(`typed:${typedText}`)
+                // console.log(`untyped:${untypedText}`)
+                
+                typedText.textContent = wordObjList[idx]["typed"];
+                untypedText.textContent = wordObjList[idx]["untyped"];
             }
         }
         else{
@@ -197,7 +210,10 @@ document.addEventListener('DOMContentLoaded',function() {
                 displayTime();
                 shuffleArray(highlightOrder);
                 let current = 0;
-                createPanels();
+                idx = highlightOrder[current]
+                console.log(`最初にセットする${idx}`)
+                createPanels(idx);
+                highlightCurrentPanel(idx,current);
                 // showCurrentWord();
             },3000);
             // setTimeout(() => {
@@ -238,27 +254,32 @@ document.addEventListener('DOMContentLoaded',function() {
             const typedSpan = document.createElement('span');
             const untypedSpan = document.createElement('span');
             
-            typedSpan.className = 'typed-'+i
-            untypedSpan.className = 'untyped-'+i 
+            typedSpan.id = 'typed-'+i
+            untypedSpan.id = 'untyped-'+i 
+            typedSpan.className = 'typed'
+            untypedSpan.className = 'untyped' 
             // console.log('どうよ')
             panel.className = 'panel';
             panel.id = 'panel-' + i;
             // console.log(wordObjList[  i].kana)
             // console.log(wor dObjList[i]);
-            typedSpan.textContent = wordObjList[i]['untyped'];
+            untypedSpan.textContent = wordObjList[i]['untyped'];
             letterCount += wordObjList[i]['letterLength'];
             // console.log(typedSpan.textContent)
             panel.appendChild(typedSpan);
             panel.appendChild(untypedSpan);
             panelContainer.appendChild(panel);
             panel.addEventListener('mouseenter',(event) => {
-                event.target.firstElementChild.textContent = wordObjList[i]['remarks']
-                event.target.lastElementChild.textContent = ''
-
+                if (startFlag == 3) {
+                    event.target.firstElementChild.textContent = ''
+                    event.target.lastElementChild.textContent = wordObjList[i]['remarks']
+                }
             })
             panel.addEventListener('mouseleave',(event) =>{
-                event.target.firstElementChild.textContent = wordObjList[i]['typed']
-                event.target.lastElementChild.textContent = wordObjList[i]['untyped']
+                if(startFlag == 3){
+                    event.target.firstElementChild.textContent = wordObjList[i]['typed']
+                    event.target.lastElementChild.textContent = wordObjList[i]['untyped']
+                }
             })
             panel.addEventListener
             randomPanelPlacement()
@@ -267,7 +288,8 @@ document.addEventListener('DOMContentLoaded',function() {
             window.alert('うまく単語プレートを配置できませんでした。再読込します。')
             location.reload()
         }
-        highlightCurrentPanel();
+        typedText = document.getElementById(`typed-${idx}`);
+        untypedText = document.getElementById(`untyped-${idx}`);
     }
 
     // 重なりなし
@@ -327,17 +349,35 @@ document.addEventListener('DOMContentLoaded',function() {
         });
         // console.log(placedCenters)
     }
-    
-    function highlightCurrentPanel() {
-      for (let i = 0; i < wordLength; i++) {
-        const panel = document.getElementById('panel-' + i);
-        if (panel) {
-          panel.classList.remove('active');
-          if (i === highlightOrder[current] && !panel.classList.contains('faded')) {
-            panel.classList.add('active');
-          }
+    let currentPanel;
+    let nextPanel;
+    function highlightCurrentPanel(idx,current) {
+        // この時点でのidxはすでに終わった分
+        console.log(`higilightCurrentPanelに渡された${idx}`)
+        currentPanel = document.getElementById(`panel-${idx}`);
+        console.log(currentPanel)
+        // console.log(`nextPanel-${}`)
+        nextPanel = document.getElementById(`panel-${highlightOrder[current]}`)
+        console.log(`highlightCurrentPanelに渡されるidxの次のやつ${highlightOrder[current]}`)
+        if(currentPanel.classList.contains('active')){
+            currentPanel.classList.remove('active');
+            currentPanel.classList.add('faded');
+            if(nextPanel){
+                nextPanel.classList.add('active')
+            }
+        }else{
+            currentPanel.classList.add('active');
         }
-      }
+        
+    //   for (let i = 0; i < wordLength; i++) {
+    //     const panel = document.getElementById('panel-' + i);
+    //     if (panel) {
+    //       panel.classList.remove('active');
+    //       if (i === highlightOrder[current] && !panel.classList.contains('faded')) {
+    //         panel.classList.add('active');
+    //       }
+    //     }
+    //   }
     }
     
     // function showCurrentWord() {

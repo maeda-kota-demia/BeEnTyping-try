@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
+    <img src="static/img/background.svg" alt="背景" class="background-image">
     <!-- CPUとの対戦機能！ -->
     <script src="static/higgsino.min.js"></script>
     <header id="header">
@@ -41,6 +42,7 @@
             </div>
         </div>
     </header>
+    <div class="reload" onclick="location.reload()">やり直す</div>
     <div id="panel-container">
         <h2 id="word">スペースキーを入力してください！</h2>
         <!-- <div class="panel">Maeda Kota</div> -->
@@ -53,6 +55,7 @@
             <h3>Word Count : <span id="WordCount">0</span><span>/20</span></h3>
         </div>
         <h3 id="otherresult"></h3>
+        <h3 id="score"></h3>
     </div>
     <section id="result" style="display: none;">
         <div>Esc, Enterキーを押してもう一度！</div>

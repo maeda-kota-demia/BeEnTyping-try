@@ -1,9 +1,19 @@
 html{
   height: 100%;
 }
+
+.background-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  filter: invert(1);
+  opacity: 0.02;
+}
 body {
-  /* これが画面全体に行くようにする */
-  background-image: url(img/background.svg);
   background:linear-gradient(70deg, rgba(15, 155, 32, 0.4), rgba(255, 255, 255, 0.4));
   background-attachment: fixed;
   min-height: 100%;
@@ -15,6 +25,10 @@ body {
   justify-content: space-between;
   align-items: center;
   padding-left: 0;
+}
+
+.reload {
+  cursor: pointer;
 }
 
 .logo {
@@ -74,13 +88,27 @@ body {
   transform: scale(1.2)
 }
 
-.panel.faded {
-  opacity: 0.2;
-  transform: scale(0.7);
+.untyped {
+  color: #000;
 }
 
+.untyped.active{
+
+}
+
+.typed {
+  color: #ccc;
+}
+
+.panel.faded {
+  opacity: 0.4;
+  transform: scale(0.8);
+}
 .panel.active {
   background: #ffd700;
-  color: #d33;
   box-shadow: 0 0 14px #ffd700, 0 2px 8px #4448;
+}
+
+.panel.active span:last-child{
+  color: #d33;
 }
