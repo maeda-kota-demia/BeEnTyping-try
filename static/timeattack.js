@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded',function() {
 
                 // ゲームの最終単語→ゲーム終了
                 // 開発用：wordLength → 1にしている
-                if(current == 1){
+                if(current == wordLength){
                     clearTimeout(timeoutID);
                     stopTime += (Date.now() - startTime);
                     typedText.textContent = "";
