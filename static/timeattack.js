@@ -131,16 +131,8 @@ document.addEventListener('DOMContentLoaded',function() {
                 typedText.textContent = wordObjList[idx]['typed']
                 untypedText.textContent = wordObjList[idx]['untyped']
                 current += 1;
-                // idxが、現在の単語のwordObjListの番号を示す。それを用いて、typed,untypedを特定し、その中の単語を変える。
-                highlightCurrentPanel(idx,current);
-                idx = highlightOrder[current]
-                wordCountText.textContent = current;
-                typedText = document.getElementById(`typed-${idx}`)
-                untypedText = document.getElementById(`untyped-${idx}`)
-                console.log(`inputCheckで変更後の${idx}`)
 
                 // ゲームの最終単語→ゲーム終了
-                // 開発用：wordLength → 1にしている
                 if(current == wordLength){
                     clearTimeout(timeoutID);
                     stopTime += (Date.now() - startTime);
@@ -161,6 +153,13 @@ document.addEventListener('DOMContentLoaded',function() {
                     resultIndicate(wordObjList);
                 }
                 else{
+                    // idxが、現在の単語のwordObjListの番号を示す。それを用いて、typed,untypedを特定し、その中の単語を変える。
+                    highlightCurrentPanel(idx,current);
+                    idx = highlightOrder[current]
+                    wordCountText.textContent = current;
+                    typedText = document.getElementById(`typed-${idx}`)
+                    untypedText = document.getElementById(`untyped-${idx}`)
+                    console.log(`inputCheckで変更後の${idx}`)
                     typedText.innerText = "";
                     untypedText.innerText = wordObjList[idx]["untyped"];
                 }
