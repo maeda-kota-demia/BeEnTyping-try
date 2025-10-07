@@ -16,23 +16,22 @@ document.addEventListener('DOMContentLoaded',function() {
     let wordCountText = document.getElementById('WordCount');
     var otherresult = document.getElementById("otherresult");
     const scoreText = document.getElementById('score')
+    const finishSection = document.getElementById('finish')
     const resultSection = document.getElementById('result')
+    const restartSentence = document.getElementById('restart')
 
 
     function displayTime() {
         const currentTime = new Date(Date.now() - startTime + stopTime);
-        // console.log(currentTime)
         const s = String(parseInt(currentTime.getMinutes()) * 60 + parseInt(currentTime.getSeconds())).padStart(2, '0');
         const ms = String(currentTime.getMilliseconds()).padStart(3, '0');
         timeText.textContent = `${s}.${ms}`;
         timeoutID = setTimeout(displayTime, 10);
     }    
 
-    // var flag = 0;
     var startFlag = 0;
     var missTypeCount = 0;
     var typeCount = 0;
-    // let idx;
     
     var wordObjList = [];
     var genre = document.getElementById('genre')
@@ -42,7 +41,6 @@ document.addEventListener('DOMContentLoaded',function() {
 
     genreBtns.forEach(element => {
         element.querySelector('input').addEventListener('click',(event) => {
-            console.log('クリックされました。')
             newRadioInput = event.target;
             if(radioInput !== newRadioInput){
                 genre.value = newRadioInput.value;
@@ -68,7 +66,6 @@ document.addEventListener('DOMContentLoaded',function() {
     function wordObjListMake(data){
         const lines = data.split('\n')
         shuffleArray(lines)
-        // console.log(lines)
 
         for(let i=0;i<20;i++){
             let word = lines[i].split(',');
@@ -93,12 +90,17 @@ document.addEventListener('DOMContentLoaded',function() {
             var tableDataRemarks = document.createElement("p");
             tableDataWord.appendChild(document.createTextNode(element["word"]));
             tableDataRemarks.appendChild(document.createTextNode(element["remarks"]));
+            tableRow.classList.add('typed-words')
+            tableDataWord.classList.add('result__table__words')
+            tableDataRemarks.classList.add('result__table__words')
             tableRow.appendChild(tableDataWord);
             tableRow.appendChild(tableDataRemarks);
             table.appendChild(tableRow);
         })
         resultSection.appendChild(table);
         resultSection.style.display = "block";
+        restartSentence.style.display = "block";
+        finishSection.style.display = "block";
         // setTimeout(()=> {
         //     document.getElementById("result__link").classList.add("active");
         // }, 500)
@@ -139,23 +141,23 @@ document.addEventListener('DOMContentLoaded',function() {
 
                 // ゲームの最終単語→ゲーム終了
                 // 開発用：wordLength → 1にしている
-                if(current == 5){
+                if(current == 1){
                     clearTimeout(timeoutID);
                     stopTime += (Date.now() - startTime);
                     typedText.textContent = "";
                     var score = parseInt((letterCount + missTypeCount) / stopTime * 60000 * (letterCount / (letterCount + missTypeCount)) ** 3);
                     scoreText.innerText = `SCORE : ${score}`;
-                    otherresult.innerText = `合計入力文字数（ミスを含む${typeCount}）`;
+                    otherresult.innerText = `合計入力文字数（ミスを含む):${typeCount}`;
                     // 全パネルのハイライトを消す
                     for (let i = 0; i < wordLength; i++) {
                         const panel = document.getElementById('panel-' + i);
                         if (panel) {
                             panel.classList.remove('active','faded');
+                            panel.style.animation = 'none';
                             // panel.classList.remove('')
                         }    
                     }
                     startFlag = 3
-                    // console.log('終了')
                     resultIndicate(wordObjList);
                 }
                 else{
@@ -166,8 +168,6 @@ document.addEventListener('DOMContentLoaded',function() {
             else{
                 wordObjList[idx]["typed"] = wordObjList[idx]["typed"] + wordObjList[idx]["untyped"].charAt(0);
                 wordObjList[idx]["untyped"] = wordObjList[idx]["untyped"].substr(1);
-                // console.log(`typed:${typedText}`)
-                // console.log(`untyped:${untypedText}`)
                 
                 typedText.textContent = wordObjList[idx]["typed"];
                 untypedText.textContent = wordObjList[idx]["untyped"];
@@ -183,16 +183,13 @@ document.addEventListener('DOMContentLoaded',function() {
     }
     
     window.addEventListener("keydown", (event) => {
-        // console.log('key_down')
         if(startFlag == 0 && event.key == " "){
-            // console.log('space')
             for (let i = 3,j=0; i >= 1; i--,j++) {
                 setTimeout(() => {
                     wordBox.innerText = i;
                     startFlag = 1;
                     countSound.currentTime = 0;
                     countSound.play();
-                    // console.log('１秒')
                 }, j*1000)
             }
             setTimeout(async ()=> {
@@ -203,10 +200,7 @@ document.addEventListener('DOMContentLoaded',function() {
                 startTime = Date.now();
                 startSound.currentTime = 0;
                 startSound.play();
-                // console.log(`word-${genre.value}.csv`)
                 await fetch(`word-${genre.value}.csv`).then(response => response.text()).then(data => wordObjListMake(data))
-                // console.log(typeof(wordObjList))
-                // console.log(wordObjList)
                 displayTime();
                 shuffleArray(highlightOrder);
                 let current = 0;
@@ -235,16 +229,8 @@ document.addEventListener('DOMContentLoaded',function() {
         highlightOrder.push(i);
     }
     let current = 0;
-    let miss = 0;
-    let started = false;
-    // let startTime = null;
-    let finished = false;
     
     const panelContainer = document.getElementById('panel-container');
-    const currentWordDiv = document.getElementById('current-word');
-    const info = document.getElementById('info');
-    // const startBtn = document.getElementById('start');
-    const restartBtn = document.getElementById('restart');
     let letterCount = 0;
 
     function createPanels() {
@@ -253,19 +239,17 @@ document.addEventListener('DOMContentLoaded',function() {
             const panel = document.createElement('div');
             const typedSpan = document.createElement('span');
             const untypedSpan = document.createElement('span');
+            const delay = Math.random() * 2;
+            panel.style.animationDelay = `${delay}s`;
             
             typedSpan.id = 'typed-'+i
             untypedSpan.id = 'untyped-'+i 
             typedSpan.className = 'typed'
             untypedSpan.className = 'untyped' 
-            // console.log('どうよ')
             panel.className = 'panel';
             panel.id = 'panel-' + i;
-            // console.log(wordObjList[  i].kana)
-            // console.log(wor dObjList[i]);
             untypedSpan.textContent = wordObjList[i]['untyped'];
             letterCount += wordObjList[i]['letterLength'];
-            // console.log(typedSpan.textContent)
             panel.appendChild(typedSpan);
             panel.appendChild(untypedSpan);
             panelContainer.appendChild(panel);
@@ -281,11 +265,10 @@ document.addEventListener('DOMContentLoaded',function() {
                     event.target.lastElementChild.textContent = wordObjList[i]['untyped']
                 }
             })
-            panel.addEventListener
             randomPanelPlacement()
         }
         if (placeMiss){
-            window.alert('うまく単語プレートを配置できませんでした。再読込します。')
+            window.alert('うまく単語プレートを配置できませんでした。画面が小さすぎる可能性があります。\n再読込します。')
             location.reload()
         }
         typedText = document.getElementById(`typed-${idx}`);
@@ -300,7 +283,6 @@ document.addEventListener('DOMContentLoaded',function() {
         const panels = Array.from(container.getElementsByClassName('panel'));
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
-        // console.log(`containerWidth:${containerWidth},containerHeight:${containerHeight}`)
         const panelSize = panels[0].clientWidth;// 円の直径
         const panelRadius = panelSize / 2; // 円の半径
 
@@ -343,11 +325,9 @@ document.addEventListener('DOMContentLoaded',function() {
                 panel.style.top = `${newPosition.top}px`;
                 placedCenters.push(newPosition.center);
             } else {
-                console.log('変更')
                 placeMiss = true
             }
         });
-        // console.log(placedCenters)
     }
     let currentPanel;
     let nextPanel;
@@ -355,8 +335,6 @@ document.addEventListener('DOMContentLoaded',function() {
         // この時点でのidxはすでに終わった分
         console.log(`higilightCurrentPanelに渡された${idx}`)
         currentPanel = document.getElementById(`panel-${idx}`);
-        console.log(currentPanel)
-        // console.log(`nextPanel-${}`)
         nextPanel = document.getElementById(`panel-${highlightOrder[current]}`)
         console.log(`highlightCurrentPanelに渡されるidxの次のやつ${highlightOrder[current]}`)
         if(currentPanel.classList.contains('active')){
@@ -368,103 +346,5 @@ document.addEventListener('DOMContentLoaded',function() {
         }else{
             currentPanel.classList.add('active');
         }
-        
-    //   for (let i = 0; i < wordLength; i++) {
-    //     const panel = document.getElementById('panel-' + i);
-    //     if (panel) {
-    //       panel.classList.remove('active');
-    //       if (i === highlightOrder[current] && !panel.classList.contains('faded')) {
-    //         panel.classList.add('active');
-    //       }
-    //     }
-    //   }
     }
-    
-    // function showCurrentWord() {
-    //   // 今回ハイライトされているパネルの単語を中央表示
-    // //   const idx = highlightOrder[current];
-    // //   currentWordDiv.textContent = wordObjList[idx];
-    // //   input.value = "";
-    // //   input.focus();
-    //   highlightCurrentPanel();
-    // }
-    
-    // function finishGame() {
-    // //   finished = true;
-    // //   input.style.display = "none";
-    // //   restartBtn.style.display = "inline-block";
-    //   let time = ((Date.now() - startTime)/1000).toFixed(2);
-    //   info.innerHTML = `<strong>おめでとう！クリア！</strong><br>タイム: ${time}秒<br>ミス: ${miss}回`;
-    //   // 全パネルのハイライトを消す
-    // //   for (let i = 0; i < baseWords.length; i++) {
-    // //     const panel = document.getElementById('panel-' + i);
-    // //     if (panel) panel.classList.remove('active');
-    // //   }
-    //   shuffleArray(highlightOrder)
-    // }
-    
-
-
-
-
-    // input.addEventListener("input", () => {
-    //   if (!started || finished) return;
-    // //   const idx = highlightOrder[current];
-    //   if (input.value === wordObjList[idx]) {
-    //     // 正解：パネルをフェードアウト＆ハイライト解除
-    //     const panel = document.getElementById('panel-' + idx);
-    //     panel.classList.add('faded');
-    //     panel.classList.remove('active');
-    //     current++;
-    //     if (current === wordLength) {
-    //       finishGame();
-    //     } else {
-    //       showCurrentWord();
-    //     }
-    //   } else if (!wordObjList[idx].startsWith(input.value)) {
-    //     miss++;
-    //     input.classList.add("miss");
-    //     setTimeout(()=>input.classList.remove("miss"), 200);
-    //   }
-    // });
 })
-
-
-
-
-
-
-// const baseWords = [
-//   "apple", "banana", "cat", "dog", "egg", "fish", "grape", "hat", "ice", "juice",
-//   "kite", "lion", "moon", "nose", "orange", "pig", "queen", "rose", "star", "tree"
-// ];
-
-// startBtn.addEventListener("click", () => {
-//   started = true;
-//   finished = false;
-//   current = 0;
-//   miss = 0;
-//   info.textContent = "";
-//   startBtn.style.display = "none";
-//   restartBtn.style.display = "none";
-//   input.style.display = "";
-//   shuffleArray(highlightOrder);
-//   createPanels();
-//   startTime = Date.now();
-// });
-
-// restartBtn.addEventListener("click", () => {
-//   started = true;
-//   finished = false;
-//   current = 0;
-//   miss = 0;
-//   info.textContent = "";
-//   restartBtn.style.display = "none";
-//   input.style.display = "";
-//   highlightOrder = shuffleArray([...Array(baseWords.length).keys()]);
-//   createPanels();
-//   showCurrentWord();
-//   startTime = Date.now();
-// });
-
-
