@@ -9,15 +9,13 @@
 </head>
 <body>
     <img src="static/img/background.svg" alt="背景" class="background-image">
-    <!-- CPUとの対戦機能！ -->
-    <script src="static/higgsino.min.js"></script>
+    <script src="static/js/higgsino.min.js"></script>
     <header id="header">
         <div class="logo-wrapper">
             <div class="logo">
                 <img src="static/img/logo_color.svg" alt=BeEngineer"><h2 class="logo-str">Flash Typing</h2>
             </div>
             <div class="reload" onclick="location.reload()">もう一度チャレンジ</div>
-            <h3 id="restart" style="display: none;">Esc, Enterキーを押してもう一度！</h3>
         </div>
         <div class="genre-wrapper">
             <div class="genre-heading">
@@ -52,25 +50,22 @@
             </div>
         </div>
     </header>
-    <div id="results" style="display: none;">
-        <div id="score-wrapper">
-            <h1 id="score" class="result"></h1>
-            <h4 id="other-result" class="result"></h4>
-        </div>
-        <div class="word-anchor-btn">
-            <a href="#word-table" class="updown center">↓&nbsp;入力した単語をチェック！</a>
-        </div>
-    </div>
     <div id="panel-container">
         <h1 id="info">スペースキーを入力してください！</h2>
     </div>
-    <div class="game">
-        <div class="game__info">
-            <h2>MISS : <span id="missMount">0</span></h2>
-            <h2>TIME : <span id="timeText">00.000</span></h2>
-            <h2>Word Count : <span id="WordCount">0</span><span>/20</span></h2>
-        </div>
+    <div class="game__info">
+        <h2>MISS : <span id="missMount">0</span></h2>
+        <h2>TIME : <span id="timeText">00.000</span></h2>
+        <h2>Word Count : <span id="WordCount">0</span><span>/20</span></h2>
     </div>
+    <div id="results" style="display: none;">
+        <h1 id="score" class="result"></h1>
+        <h4 id="other-result" class="result"></h4>
+        <!-- <div class="word-anchor-btn">
+            <a href="#word-table" class="updown center">↓&nbsp;入力した単語をチェック！</a>
+        </div> -->
+    </div>
+    <h3 id="restart" style="display: none;">Esc, Enterキーを押してもう一度！</h3>
     <section id="word-meanings" style="display: none;">
         <h2 class="center">入力した単語</h2>
         <div id="word-table">
@@ -95,6 +90,6 @@
             <source src="static/mp3/countdown-2.mp3" type="audio/mp3">
         </audio>
     </section>
-    <script src="static/timeattack.js"></script>
+    <script src="static/js/game.js"></script>
 </body>
 </html>

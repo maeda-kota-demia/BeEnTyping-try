@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded',() => {
         })
         wordMeanSection.style.display = "block";
         restartSentence.style.display = "block";
-        resultSection.style.display = "block";
+        resultSection.style.display = "flex";
     }
 
     function processEndGame(){
@@ -262,6 +262,11 @@ document.addEventListener('DOMContentLoaded',() => {
         }
         startFlag = 3
         resultIndicate();
+        window.scrollTo({
+            top: 700,      // 縦スクロールの位置
+            left: 0,     // 横スクロールの位置（通常は 0 のままでOK）
+            behavior: "smooth"
+        })
     }
 
     //ジャンル選択用
