@@ -26,44 +26,43 @@
             <div class="genre-options">
                 <label class="genre_btn active-genre" >
                     中学１年生レベル英単語
-                    <input name="genre" type="radio" value="jr-1"></input>
+                    <input name="genre" type="radio" value="jr-1">
                 </label>
                 <label class="genre_btn" >
                     中学２年生レベル英単語
-                    <input name="genre" type="radio"  value="jr-2"></input>
+                    <input name="genre" type="radio"  value="jr-2">
                 </label>
                 <label class="genre_btn" >
                     中学３年生レベル英単語
-                    <input name="genre" type="radio"  value="jr-3"></input>
+                    <input name="genre" type="radio"  value="jr-3">
                 </label>
                 <label class="genre_btn" >
                     高校１年生レベル英単語
-                    <input name="genre" type="radio"  value="hi-1"></input>
+                    <input name="genre" type="radio"  value="hi-1">
                 </label>
                 <label class="genre_btn" >
                     高校２年生レベル英単語
-                    <input name="genre" type="radio"  value="hi-2"></input>
+                    <input name="genre" type="radio"  value="hi-2">
                 </label>
                 <label class="genre_btn" >
                     高校３年生レベル英単語
-                    <input name="genre" type="radio"  value="hi-3"></input>
+                    <input name="genre" type="radio"  value="hi-3">
                 </label>
                 <input name="genre" id="genre" value="jr-1" type="hidden">
             </div>
         </div>
     </header>
-    <div id="finish" style="display: none;">
+    <div id="results" style="display: none;">
         <div id="score-wrapper">
             <h1 id="score" class="results"></h1>
             <h4 id="otherresult" class="results"></h4>
         </div>
-        <div>
-            <a href="#result" id="result__link" class="updown center">↓&nbsp;入力した単語をチェック！</a>
+        <div class="word-anchor-btn">
+            <a href="#word-table" class="updown center">↓&nbsp;入力した単語をチェック！</a>
         </div>
     </div>
     <div id="panel-container">
         <h1 id="word">スペースキーを入力してください！</h2>
-        <!-- <div class="panel">Maeda Kota</div> -->
     </div>
     <div class="game">
         <div class="game__info">
@@ -72,12 +71,12 @@
             <h2>Word Count : <span id="WordCount">0</span><span>/20</span></h2>
         </div>
     </div>
-    <section id="result" style="display: none;">
+    <section id="word-meanings" style="display: none;">
         <h2 class="center">入力した単語</h2>
-        <div id="result__table" class="result__table">
+        <div id="word-table">
             <div class="typed-words">
-                <h3 class="result__table__words">単語</h3>
-                <h3 class="result__table__words">意味など</h3>
+                <h3 class="words">単語</h3>
+                <h3 class="words">意味など</h3>
             </div>
         </div>
     </section>
