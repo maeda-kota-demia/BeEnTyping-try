@@ -216,7 +216,8 @@ input {
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  width: 35%;
+  min-width: 485px;
+  width: 40%;
   border-bottom: thick double rgba(255, 0, 0, 0.7) ;
 }
 
