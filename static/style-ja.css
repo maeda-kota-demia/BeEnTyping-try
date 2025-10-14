@@ -29,25 +29,24 @@ input {
   /* margin-top: 3%;? */
   width: 100%;
   display: flex;
-  justify-content: flex-end;
   padding-left: 0;
+  justify-content: space-between;
 }
 
 
 .logo-wrapper {
   margin-left: 1%;
-  flex-grow: 1;
 }
 
 .logo {
   display: flex;
-  margin: 1% 2%;
   min-width: 314px;
+  width: 20%;
 }
 
 .logo-str {
   display: block;
-  margin-top:11%;
+  margin-top:14%;
   margin-left: 1%;
 
 }
@@ -82,74 +81,27 @@ input {
 }
 
 .genre-wrapper {
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.genre-options {
-  /* margin-right: 20%; */
+  width: 50%;
+  /* margin-right: 10%; */
   display: flex;
   justify-content: space-around;
-  flex-flow: row wrap;
-  /* padding: 2%; */
-}
-
-.genre-heading {
-  /* margin-bottom: 10%; */
-  text-align: center;
-  display: flex;
-  align-items: center;
-  width: 50%;
-}
-
-.to-ja-wrapper {
-  margin-left: 5%;
-}
-
-.to-ja {
-  position: relative;
-  color: #000;
-  transition: color 0.4s ease; 
-}
-
-/* テキストを重ねるための疑似要素 */
-.to-ja::before {
-  content: '日本語タイピングモードへ';
-  /* 親要素(aタグ)に重ねる */
-  position: absolute;
-  top: 0;
-  left: 0;
-  /* ホバー前の幅を0にする（見えなくする） */
-  width: 0;
-  overflow: hidden;
-  /* ホバー時の文字色 */
-  color: red;
-  text-decoration: underline;
-  /* アニメーションの設定（0.5秒かけて幅を変化させる） */
-  transition: width 0.5s ease-in-out;
-  /* テキストが折り返さないようにする */
-  white-space: nowrap;
-}
-
-/* aタグにホバーした時に、::before疑似要素のスタイルを変化させる */
-.to-ja:hover::before {
-  /* 幅を100%にして全体を表示 */
-  width: 100%;
 }
 /* 
-.to-ja:hover {
-  color: #0f9b20;
+.genre-heading {
+  text-align: center;
 } */
+
+a {
+  text-decoration: none;
+  color: #000;
+}
 
 .genre_btn {
   background-color: rgba(15,155,32,0.26);
   border: 1px solid #0f9b20;
-  padding: 1em 2em;
-  margin-bottom: 1%;
+  /* padding: 1em 2em; */
+  margin-top: 10%;
   margin-left: 1%;
-  flex-basis: 30%;
   box-sizing: border-box;
   cursor: pointer;
   text-align: center;
@@ -171,11 +123,12 @@ input {
   position: relative;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 }
 
 @keyframes scaleUpDown {
   0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  50% { transform: scale(1.2); }
   100% { transform: scale(1); }
 }
 
@@ -202,7 +155,7 @@ input {
 }
 .panel:hover{
   /* display: inline-block; */
-  transform: scale(1,2)
+  transform: scale(1.2)
 }
 
 .untyped {
@@ -217,10 +170,12 @@ input {
 .panel.faded {
   opacity: 0.4;
   transform: scale(0.8);
+  z-index: 0;
 }
 .panel.active {
   background: #ffd700;
   box-shadow: 0 0 14px #ffd700, 0 2px 8px #4448;
+  z-index: 10;
 }
 
 .panel.active span:last-child{

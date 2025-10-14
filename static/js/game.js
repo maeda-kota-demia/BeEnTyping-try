@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded',() => {
     const otherResult = document.getElementById("other-result");
     const resultSection = document.getElementById('results');
     const wordMeanSection = document.getElementById('word-meanings');
-    const restartSentence = document.getElementById('restart');
     //効果音
     const clearSound = document.getElementById('type_clear')
     const missSound = document.getElementById('type_miss')
@@ -98,13 +97,13 @@ document.addEventListener('DOMContentLoaded',() => {
             if(i == 0) {
                 panel.classList.add('active');
             }
-            randomPanelPlacement()
         }
+        randomPanelPlacement()
     }
 
     // 重なりなし
     function randomPanelPlacement() {
-        let placeMiss = false;
+        let isPlaceMiss = false;
         const container = document.getElementById('panel-container');
         // HTMLCollectionを配列に変換してforEachを使えるようにする
         const panels = Array.from(container.getElementsByClassName('panel'));
@@ -152,10 +151,10 @@ document.addEventListener('DOMContentLoaded',() => {
                 panel.style.top = `${newPosition.top}px`;
                 placedCenters.push(newPosition.center);
             } else {
-                placeMiss = true
+                isPlaceMiss = true
             }
         });
-        if (placeMiss){
+        if (isPlaceMiss){
             window.alert('うまく単語プレートを配置できませんでした。画面が小さすぎる可能性があります。\n再読込します。')
             location.reload()
         }
@@ -164,6 +163,7 @@ document.addEventListener('DOMContentLoaded',() => {
     function highlightCurrentPanel() {
         let currentPanel = document.getElementById(`panel-${current-1}`);
         let nextPanel = document.getElementById(`panel-${(current)}`)
+        //一番外側のif,elseはなくてもいい。
         if(currentPanel.classList.contains('active')){
             currentPanel.classList.remove('active');
             currentPanel.classList.add('faded');
@@ -240,7 +240,6 @@ document.addEventListener('DOMContentLoaded',() => {
             table.appendChild(tableRow);
         })
         wordMeanSection.style.display = "block";
-        restartSentence.style.display = "block";
         resultSection.style.display = "flex";
     }
 
