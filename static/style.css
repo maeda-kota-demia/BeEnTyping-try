@@ -164,7 +164,7 @@ input {
   border-radius: 50%;
   font-size: 1em;
   padding: 0;
-  width: 95px;
+  width: 100px;
   aspect-ratio: 1;
   display: flex;
   align-items: center;
@@ -181,11 +181,13 @@ input {
 
 .untyped {
   color: #000;
-  font-size: 18px;
+  font-size: 1.35em;
+  font-weight: bold;
 }
 
 .typed {
   color: #ccc;
+  font-size: 1.2em;
 }
 
 .panel.faded {

@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded',() => {
                 startTime = Date.now();
                 startSound.currentTime = 0;
                 startSound.play();
-                await fetch(`word-${genre.value}.csv`).then(response => response.text()).then(data => wordObjListMake(data))
+                await fetch(`csv/word-${genre.value}.csv`).then(response => response.text()).then(data => wordObjListMake(data))
                 displayTime();
                 createPanels();
                 typedText = document.getElementById(`typed-${current}`);

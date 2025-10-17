@@ -58,6 +58,86 @@ document.addEventListener('DOMContentLoaded',function() {
         }
     }
 
+    function createPanels() {
+        panelContainer.innerHTML = '';
+        for (let i = 0; i < wordLength ; i++) {
+            const panel = document.createElement('div');
+            const jpWord = document.createElement('h2')
+            const kanaBox = document.createElement('h3')
+            const enBox = document.createElement('h3')
+            const typedKana = document.createElement('span');
+            const untypedKana = document.createElement('span');
+            const typedEn = document.createElement('span');
+            const untypedEn = document.createElement('span');
+            const delay = Math.random() * 2;
+            panel.style.animationDelay = `${delay}s`;
+            
+            jpWord.id = 'jp_word'
+            typedKana.id = 'kana_typed-'+i
+            untypedKana.id = 'kana_untyped-'+i
+            typedEn.id = 'en_typed-'+i
+            untypedEn.id = 'en_untyped-'+i
+            typedKana.className = 'typed'
+            untypedKana.className = 'untyped'
+            typedEn.className = 'typed'
+            untypedEn.className = 'untyped' 
+            panel.className = 'panel';
+            panel.id = 'panel-' + i;
+
+            jpWord.textContent = wordObjList[i].example
+            untypedKana.textContent = wordObjList[i].kana.untyped;
+            untypedEn.textContent = wordObjList[i].roman.untyped
+            letterCount += wordObjList[i].roman.all.length;
+            
+            kanaBox.appendChild(typedKana)
+            kanaBox.appendChild(untypedKana)
+
+            enBox.appendChild(typedEn)
+            enBox.appendChild(untypedEn)
+
+            panel.appendChild(jpWord);
+            panel.appendChild(kanaBox);
+            panel.appendChild(enBox);
+
+            panelContainer.appendChild(panel);
+        }
+        randomPanelPlacement()
+        //最初のパネルはここで光らせて置く。
+        document.getElementById('panel-0').classList.add('active')
+    };
+
+    function randomPanelPlacement() {
+        const panels = Array.from(panelContainer.getElementsByClassName('panel'));
+        const containerWidth = panelContainer.clientWidth;
+        const containerHeight = panelContainer.clientHeight;
+        const panelSize = panels[0].clientWidth;// 円の直径
+
+        panels.forEach(panel => {
+            // パネルのサイズ分を引いて画面からはみ出ないように設定する
+            const randomLeft = Math.random() * (containerWidth - panelSize);
+            const randomTop = Math.random() * (containerHeight - panelSize);
+            
+            panel.style.left = `${randomLeft}px`;
+            panel.style.top = `${randomTop}px`;
+            }
+        )
+    }
+
+    function highlightCurrentPanel() {
+        let currentPanel = document.getElementById(`panel-${current-1}`);
+        let nextPanel = document.getElementById(`panel-${(current)}`)
+        //一番外側のif,elseはなくてもいい。
+        if(currentPanel.classList.contains('active')){
+            currentPanel.classList.remove('active');
+            currentPanel.classList.add('faded');
+            if(nextPanel){
+                nextPanel.classList.add('active')
+            }
+        }else{
+            currentPanel.classList.add('active');
+        }
+    }
+
     function processEndGame(){
         clearTimeout(timeoutID);
         const scoreText = document.getElementById('score');
@@ -162,7 +242,7 @@ document.addEventListener('DOMContentLoaded',function() {
                 startTime = Date.now();
                 startSound.currentTime = 0;
                 startSound.play();
-                await fetch(`word.csv`).then(response => response.text()).then(data => wordObjListMake(data))
+                await fetch(`csv/word-ja.csv`).then(response => response.text()).then(data => wordObjListMake(data))
                 displayTime();
                 createPanels();
                 typedKana = document.getElementById(`kana_typed-0`);
@@ -179,85 +259,4 @@ document.addEventListener('DOMContentLoaded',function() {
             this.location.reload()
         }
     })
-    function randomPanelPlacement() {
-        const panels = Array.from(panelContainer.getElementsByClassName('panel'));
-        const containerWidth = panelContainer.clientWidth;
-        const containerHeight = panelContainer.clientHeight;
-        const panelSize = panels[0].clientWidth;// 円の直径
-
-        panels.forEach(panel => {
-            // パネルのサイズ分を引いて画面からはみ出ないように設定する
-            const randomLeft = Math.random() * (containerWidth - panelSize);
-            const randomTop = Math.random() * (containerHeight - panelSize);
-            
-            panel.style.left = `${randomLeft}px`;
-            panel.style.top = `${randomTop}px`;
-            }
-        )
-    }
-
-function createPanels() {
-    panelContainer.innerHTML = '';
-    for (let i = 0; i < wordLength ; i++) {
-        const panel = document.createElement('div');
-        const jpWord = document.createElement('h2')
-        const kanaBox = document.createElement('h3')
-        const enBox = document.createElement('h3')
-        const typedKana = document.createElement('span');
-        const untypedKana = document.createElement('span');
-        const typedEn = document.createElement('span');
-        const untypedEn = document.createElement('span');
-        const delay = Math.random() * 2;
-        panel.style.animationDelay = `${delay}s`;
-        
-        jpWord.id = 'jp_word'
-        typedKana.id = 'kana_typed-'+i
-        untypedKana.id = 'kana_untyped-'+i
-        typedEn.id = 'en_typed-'+i
-        untypedEn.id = 'en_untyped-'+i
-        typedKana.className = 'typed'
-        untypedKana.className = 'untyped'
-        typedEn.className = 'typed'
-        untypedEn.className = 'untyped' 
-        panel.className = 'panel';
-        panel.id = 'panel-' + i;
-
-        jpWord.textContent = wordObjList[i].example
-        untypedKana.textContent = wordObjList[i].kana.untyped;
-        untypedEn.textContent = wordObjList[i].roman.untyped
-        letterCount += wordObjList[i].roman.all.length;
-        
-        kanaBox.appendChild(typedKana)
-        kanaBox.appendChild(untypedKana)
-
-        enBox.appendChild(typedEn)
-        enBox.appendChild(untypedEn)
-
-        panel.appendChild(jpWord);
-        panel.appendChild(kanaBox);
-        panel.appendChild(enBox);
-
-        panelContainer.appendChild(panel);
-    }
-    randomPanelPlacement()
-    //最初のパネルはここで光らせて置く。
-    document.getElementById('panel-0').classList.add('active')
-};
-
-function highlightCurrentPanel() {
-        let currentPanel = document.getElementById(`panel-${current-1}`);
-        let nextPanel = document.getElementById(`panel-${(current)}`)
-        //一番外側のif,elseはなくてもいい。
-        if(currentPanel.classList.contains('active')){
-            currentPanel.classList.remove('active');
-            currentPanel.classList.add('faded');
-            if(nextPanel){
-                nextPanel.classList.add('active')
-            }
-        }else{
-            currentPanel.classList.add('active');
-        }
-    }
-
-
 })
