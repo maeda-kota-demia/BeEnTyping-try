@@ -182,13 +182,13 @@ document.addEventListener('DOMContentLoaded',() => {
         if(key == wordObjList[current]["untyped"].charAt(0)){
             clearSound.currentTime = 0;
             clearSound.play();
-
+            
+            wordObjList[current]["typed"] = wordObjList[current]["typed"] + wordObjList[current]["untyped"].charAt(0);
+            wordObjList[current]["untyped"] = wordObjList[current]["untyped"].substring(1);
+            typedText.textContent = wordObjList[current]['typed']
+            untypedText.textContent = wordObjList[current]['untyped']
             // ラスト1文字→次のワードへ
-            if(wordObjList[current]["untyped"].length == 1){
-                wordObjList[current]["typed"] = wordObjList[current]["typed"] + wordObjList[current]["untyped"].charAt(0);
-                wordObjList[current]["untyped"] = "";
-                typedText.textContent = wordObjList[current]['typed']
-                untypedText.textContent = wordObjList[current]['untyped']
+            if(wordObjList[current]["untyped"].length == 0){
                 
                 current += 1;
                 //currentは、＋１をすでにやっているので、０からスタートしているが、プレイヤーには１から語数を数えているように思える。
@@ -201,16 +201,9 @@ document.addEventListener('DOMContentLoaded',() => {
                     highlightCurrentPanel();
                     typedText = document.getElementById(`typed-${current}`)
                     untypedText = document.getElementById(`untyped-${current}`)
-                    typedText.innerText = "";
-                    untypedText.innerText = wordObjList[current]["untyped"];
+                    // typedText.innerText = "";
+                    // untypedText.innerText = wordObjList[current]["untyped"];
                 }
-            }
-            else{
-                wordObjList[current]["typed"] = wordObjList[current]["typed"] + wordObjList[current]["untyped"].charAt(0);
-                wordObjList[current]["untyped"] = wordObjList[current]["untyped"].substr(1);
-                
-                typedText.textContent = wordObjList[current]["typed"];
-                untypedText.textContent = wordObjList[current]["untyped"];
             }
         }
         else{

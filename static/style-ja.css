@@ -81,7 +81,7 @@ input {
 }
 
 .genre-wrapper {
-  width: 50%;
+  width: 70%;
   /* margin-right: 10%; */
   display: flex;
   flex-direction: column;
@@ -105,17 +105,19 @@ a {
   color: #000;
 }
 
+
 .genre_btn {
   background-color: rgba(15,155,32,0.26);
   border: 1px solid #0f9b20;
-  /* padding: 1em 2em; */
-  /* margin-top: 10%; */
   margin-left: 1%;
+  flex-basis: 30%;
   box-sizing: border-box;
   cursor: pointer;
   text-align: center;
   min-width: 242px;
+  display: block;
 }
+
 
 .active-genre {
   background-color: #7eee3e;
@@ -126,6 +128,7 @@ a {
 #panel-container {
   display: flex;
   width: 100%;
+  min-width: 768px;
   height: 60vh;
   min-height: 400px;
   /* margin-bottom: 3%; */
@@ -137,34 +140,40 @@ a {
 
 @keyframes scaleUpDown {
   0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+  50% { transform: scale(1.15); }
   100% { transform: scale(1); }
 }
 
 .panel {
   animation: scaleUpDown 1s infinite;
   background: #6cf;
-  /* background-color: rgba(15,155,32,0.5); */
   color: #222;
   border-radius: 50%;
   font-size: 1em;
   padding: 0;
-  /* height: 5vh; */
-  width: 95px;
+  min-width: 200px;
   aspect-ratio: 1;
+  text-align: center;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* transition: opacity 0.5s, transform 0.5s, background 0.3s; */
   transition: transform 0.3s ease;
-  opacity: 1;
-  font-weight: bold;
+  opacity: 0.8;
   box-shadow: 0 2px 8px #4448;
   position: absolute;
 }
 .panel:hover{
   /* display: inline-block; */
   transform: scale(1.2)
+}
+
+#jp_word {
+  margin: 2% auto;
+}
+
+h3 {
+  margin: 2% auto;
 }
 
 .untyped {
@@ -177,12 +186,13 @@ a {
 }
 
 .panel.faded {
-  opacity: 0.4;
   transform: scale(0.8);
   z-index: 0;
+  opacity: 0.4;
 }
 .panel.active {
   background: #ffd700;
+  opacity: 1;
   box-shadow: 0 0 14px #ffd700, 0 2px 8px #4448;
   z-index: 10;
 }
@@ -197,6 +207,7 @@ a {
   justify-content: space-around;
   border: 2px solid #000;
   width: 80%;
+  min-width: 768px;
   padding: 2% 1%;
   margin: 0 auto;
 }
