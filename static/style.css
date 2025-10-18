@@ -92,34 +92,11 @@ input {
 }
 
 .to-ja {
-  position: relative;
   color: #000;
-  transition: color 0.4s ease; 
 }
 
-/* テキストを重ねるための疑似要素 */
-.to-ja::before {
-  content: '日本語タイピングモードへ';
-  /* 親要素(aタグ)に重ねる */
-  position: absolute;
-  top: 0;
-  left: 0;
-  /* ホバー前の幅を0にする（見えなくする） */
-  width: 0;
-  overflow: hidden;
-  /* ホバー時の文字色 */
+.to-ja-wrapper :hover{
   color: red;
-  text-decoration: underline;
-  /* アニメーションの設定（0.5秒かけて幅を変化させる） */
-  transition: width 0.5s ease-in-out;
-  /* テキストが折り返さないようにする */
-  white-space: nowrap;
-}
-
-/* aタグにホバーした時に、::before疑似要素のスタイルを変化させる */
-.to-ja:hover::before {
-  /* 幅を100%にして全体を表示 */
-  width: 100%;
 }
 
 .genre_btn {
