@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded',function() {
+document.addEventListener("DOMContentLoaded",function() {
     let timeoutID;
     let startFlag = 0; // 0→開始前、１→開始待機、２→ゲーム中、３→終了
     let startTime;
@@ -13,20 +13,20 @@ document.addEventListener('DOMContentLoaded',function() {
 
     const wordObjList = [];
     const wordLength = 20
-    const infoBox = document.getElementById('info');
-    const panelContainer = document.getElementById('panel-container');
-    const wordCountText = document.getElementById('WordCount');
+    const infoBox = document.getElementById("info");
+    const panelContainer = document.getElementById("panel-container");
+    const wordCountText = document.getElementById("WordCount");
     const missMountText = document.getElementById("missMount");
     const timeText = document.getElementById("timeText");
     const otherResult = document.getElementById("other-result");
-    const resultSection = document.getElementById('results');
-    const wordMeanSection = document.getElementById('word-meanings');
+    const resultSection = document.getElementById("results");
+    const wordMeanSection = document.getElementById("word-meanings");
 
     //効果音
-    const clearSound = document.getElementById('type_clear')
-    const missSound = document.getElementById('type_miss')
-    const countSound = document.getElementById('count_down')
-    const startSound = document.getElementById('start_sound')
+    const clearSound = document.getElementById("type_clear")
+    const missSound = document.getElementById("type_miss")
+    const countSound = document.getElementById("count_down")
+    const startSound = document.getElementById("start_sound")
 
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -41,17 +41,17 @@ document.addEventListener('DOMContentLoaded',function() {
 
     function displayTime() {
         const currentTime = new Date(Date.now() - startTime);
-        const s = String(parseInt(currentTime.getMinutes()) * 60 + parseInt(currentTime.getSeconds())).padStart(2, '0');
-        const ms = String(currentTime.getMilliseconds()).padStart(3, '0');
+        const s = String(parseInt(currentTime.getMinutes()) * 60 + parseInt(currentTime.getSeconds())).padStart(2, "0");
+        const ms = String(currentTime.getMilliseconds()).padStart(3, "0");
         timeText.textContent = `${s}.${ms}`;
         timeoutID = setTimeout(displayTime, 10);
     }
 
     function wordObjListMake(data){
-        const lines = data.split('\n')
+        const lines = data.split("\n")
         shuffleArray(lines)
         for(let i=0;i<20;i++){
-            let word = lines[i].split(',')
+            let word = lines[i].split(",")
             wordObjList.push(
                 new Word(word[0],word[1])
             )
@@ -59,30 +59,30 @@ document.addEventListener('DOMContentLoaded',function() {
     }
 
     function createPanels() {
-        panelContainer.innerHTML = '';
+        panelContainer.innerHTML = "";
         for (let i = 0; i < wordLength ; i++) {
-            const panel = document.createElement('div');
-            const jpWord = document.createElement('h2')
-            const kanaBox = document.createElement('h3')
-            const enBox = document.createElement('h3')
-            const typedKana = document.createElement('span');
-            const untypedKana = document.createElement('span');
-            const typedEn = document.createElement('span');
-            const untypedEn = document.createElement('span');
+            const panel = document.createElement("div");
+            const jpWord = document.createElement("h2")
+            const kanaBox = document.createElement("h3")
+            const enBox = document.createElement("h3")
+            const typedKana = document.createElement("span");
+            const untypedKana = document.createElement("span");
+            const typedEn = document.createElement("span");
+            const untypedEn = document.createElement("span");
             const delay = Math.random() * 2;
             panel.style.animationDelay = `${delay}s`;
             
-            jpWord.id = 'jp_word'
-            typedKana.id = 'kana_typed-'+i
-            untypedKana.id = 'kana_untyped-'+i
-            typedEn.id = 'en_typed-'+i
-            untypedEn.id = 'en_untyped-'+i
-            typedKana.className = 'typed'
-            untypedKana.className = 'untyped'
-            typedEn.className = 'typed'
-            untypedEn.className = 'untyped' 
-            panel.className = 'panel';
-            panel.id = 'panel-' + i;
+            jpWord.id = "jp_word"
+            typedKana.id = "kana_typed-"+i
+            untypedKana.id = "kana_untyped-"+i
+            typedEn.id = "en_typed-"+i
+            untypedEn.id = "en_untyped-"+i
+            typedKana.className = "typed"
+            untypedKana.className = "untyped"
+            typedEn.className = "typed"
+            untypedEn.className = "untyped" 
+            panel.className = "panel";
+            panel.id = "panel-" + i;
 
             jpWord.textContent = wordObjList[i].example
             untypedKana.textContent = wordObjList[i].kana.untyped;
@@ -103,11 +103,11 @@ document.addEventListener('DOMContentLoaded',function() {
         }
         randomPanelPlacement()
         //最初のパネルはここで光らせて置く。
-        document.getElementById('panel-0').classList.add('active')
+        document.getElementById("panel-0").classList.add("active")
     };
 
     function randomPanelPlacement() {
-        const panels = Array.from(panelContainer.getElementsByClassName('panel'));
+        const panels = Array.from(panelContainer.getElementsByClassName("panel"));
         const containerWidth = panelContainer.clientWidth;
         const containerHeight = panelContainer.clientHeight;
         const panelSize = panels[0].clientWidth;// 円の直径
@@ -127,20 +127,20 @@ document.addEventListener('DOMContentLoaded',function() {
         let currentPanel = document.getElementById(`panel-${current-1}`);
         let nextPanel = document.getElementById(`panel-${(current)}`)
         //一番外側のif,elseはなくてもいい。
-        if(currentPanel.classList.contains('active')){
-            currentPanel.classList.remove('active');
-            currentPanel.classList.add('faded');
+        if(currentPanel.classList.contains("active")){
+            currentPanel.classList.remove("active");
+            currentPanel.classList.add("faded");
             if(nextPanel){
-                nextPanel.classList.add('active')
+                nextPanel.classList.add("active")
             }
         }else{
-            currentPanel.classList.add('active');
+            currentPanel.classList.add("active");
         }
     }
 
     function processEndGame(){
         clearTimeout(timeoutID);
-        const scoreText = document.getElementById('score');
+        const scoreText = document.getElementById("score");
         
         const stopTime = (Date.now() - startTime);
         const score = parseInt((letterCount + missTypeCount) / stopTime * 60000 * (letterCount / (letterCount + missTypeCount)) ** 3);
@@ -149,10 +149,10 @@ document.addEventListener('DOMContentLoaded',function() {
         // 全パネルのハイライトを消す
         // 全パネルを消すようにする？
         for (let i = 0; i < wordLength; i++) {
-            const panel = document.getElementById('panel-' + i);
+            const panel = document.getElementById("panel-" + i);
             if (panel) {
-                panel.classList.remove('active','faded');
-                panel.style.animation = 'none';
+                panel.classList.remove("active","faded");
+                panel.style.animation = "none";
             }    
         }
         startFlag = 3
@@ -167,16 +167,16 @@ document.addEventListener('DOMContentLoaded',function() {
     function resultIndicate(){
         const table = document.getElementById("word-table");
         wordObjList.forEach(element => {
-            var tableRow = document.createElement("div");
-            var tableDataWord = document.createElement("p");
-            var tableDataRemarks = document.createElement("p");
+            const tableRow = document.createElement("div");
+            const tableDataWord = document.createElement("p");
+            const tableDataRemarks = document.createElement("p");
 
             tableDataWord.textContent = element.example;
             tableDataRemarks.textContent = element.kana.all;
 
-            tableRow.classList.add('typed-words')
-            tableDataWord.classList.add('words')
-            tableDataRemarks.classList.add('words')
+            tableRow.classList.add("typed-words")
+            tableDataWord.classList.add("words")
+            tableDataRemarks.classList.add("words")
 
             tableRow.appendChild(tableDataWord);
             tableRow.appendChild(tableDataRemarks);
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded',function() {
             if(isFinish){
                 // ライブラリのエラーにより、小文字が入るとkanaのtyped,untypedがずれるのに対応する。
                 typedKana.textContent = wordObjList[current].kana.all;
-                untypedKana.textContent = '';
+                untypedKana.textContent = "";
                 current += 1;
                 wordCountText.textContent = current;
                 if(current == wordObjList.length){
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded',function() {
             }
             setTimeout(async ()=> {
                 startFlag = 2;
-                infoBox.textContent = '';
+                infoBox.textContent = "";
                 startTime = Date.now();
                 startSound.currentTime = 0;
                 startSound.play();
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded',function() {
         else if(startFlag == 2 && event.key.length < 2 && event.key.match(/^[a-zA-Z0-9!-/:-@¥[-`{-~\s]*$/)){
             inputCheck(event.key);
         }
-        else if(startFlag == 3 && (event.key =='Enter' || event.key == 'Escape')){
+        else if(startFlag == 3 && (event.key =="Enter" || event.key == "Escape")){
             this.location.reload()
         }
     })
