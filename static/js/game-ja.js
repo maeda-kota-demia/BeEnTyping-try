@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded",function() {
                 untypedKana.textContent = "";
                 current += 1;
                 wordCountText.textContent = current;
-                if(current == wordObjList.length){
+                if(current == wordLength){
                     // ゲームの終了
                     processEndGame()
                 }

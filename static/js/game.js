@@ -93,12 +93,10 @@ document.addEventListener("DOMContentLoaded",() => {
                     event.target.lastElementChild.textContent = wordObjList[i]["untyped"]
                 }
             })
-            //最初のはここで光らせて置く。
-            if(i == 0) {
-                panel.classList.add("active");
-            }
         }
         randomPanelPlacement()
+        //最初のはここで光らせて置く。
+        document.getElementById("panel-0").classList.add("active")
     }
 
     // 重なりなし
